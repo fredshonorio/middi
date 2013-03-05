@@ -14,7 +14,7 @@ public class RandomRecord {
     private static Random rnd = new Random();
     private static StringBuffer buffer = new StringBuffer(SIZE);
     private static final int alpha_len = 'z' - 'a';
-    private static final int cap_dist = Math.abs('A' - 'a');
+//    private static final int cap_dist = Math.abs('A' - 'a');
 
     public static Record getNew(Schema schema) {
         Record r = schema.newRecord();
@@ -27,7 +27,7 @@ public class RandomRecord {
     public static String rndString(int size) {
         buffer.delete(0, SIZE);
         for (int i = 0; i < size; i++) {
-            buffer.append((char) ('a' + (rnd.nextInt(alpha_len) + 1) + (rnd.nextBoolean() ? rnd.nextInt(cap_dist) : 0)));
+            buffer.append((char) ('a' + (rnd.nextInt(alpha_len) + 1)));
         }
         return buffer.toString();
     }

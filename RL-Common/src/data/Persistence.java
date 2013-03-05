@@ -16,11 +16,14 @@ import org.bson.types.ObjectId;
 
 public class Persistence {
 
+    private final static String RESULTSET_META_COLLECTION = "resultsets";
+    private final static String RESULTSET_COLLECTION_PREFIX = "resultSet_";
+    private final static String RECORDSET_META_COLLECTION = "recordsets";
+    private final static String RECORDSET_COLLECTION_PREFIX = "recordSet_";
+    private final static HashMap<Schema, Persistence> instances = new HashMap<Schema, Persistence>(3);
     private DB db;
     private static MongoClient mongoClient = null;
     private final Schema schema;
-    private final static HashMap<Schema, Persistence> instances = new HashMap<Schema, Persistence>(3);
-    private final static String RECORDSET_COLLECTION_PREFIX = "recordSet_";
 
     public static Persistence instance(Schema schema) {
         Persistence instance = instances.get(schema);
@@ -78,8 +81,8 @@ public class Persistence {
     public String storeRecordSet(RecordSet recordSet) {
         assert recordSet != null;
 
-        DBCollection sets = db.getCollection("recordsets");
-        BasicDBObject rs = new BasicDBObject().append("recordset", recordSet.toString()); //TODO: name
+        DBCollection sets = db.getCollection(RECORDSET_META_COLLECTION);
+        BasicDBObject rs = new BasicDBObject().append("name", recordSet.toString()); //TODO: name
         sets.insert(rs);
         String id = ((ObjectId) rs.get("_id")).toString();
 
@@ -104,7 +107,7 @@ public class Persistence {
 
         List<Record> records = new LinkedList<Record>();
 
-        DBCollection sets = db.getCollection("recordsets");
+        DBCollection sets = db.getCollection(RECORDSET_META_COLLECTION);
         DBObject query = new BasicDBObject("_id", recordSetId);
 
         assert sets.find(query).count() == 0 : "The recordset is not in database";
@@ -127,7 +130,85 @@ public class Persistence {
         return records;
     }
 
-    public List<Record> fetchResult(String taxonomyKey) {
+    public String storeResults(List<Result> results) {
+        assert results != null;
+        assert !results.isEmpty();
+
+        DBCollection sets = db.getCollection(RESULTSET_META_COLLECTION);
+        BasicDBObject rs = new BasicDBObject().append("name", results.toString()); //TODO: name
+        sets.insert(rs);
+        String id = ((ObjectId) rs.get("_id")).toString();
+
+        DBCollection collection = db.getCollection(RESULTSET_COLLECTION_PREFIX + id);
+        assert collection.count() == 0 : "The result set is already in database";
+
+        collection.ensureIndex(Result.FIELD_TAXONOMYKEY);
+
+        for (Result d : results) {
+            collection.insert(d.toDBObject());
+        }
+
+        return id;
+    }
+
+    public List<Result> getResults(String resultSetId) {
+        assert resultSetId != null;
+        assert !resultSetId.isEmpty();
+
+        List<Result> results = new LinkedList<Result>();
+
+        DBCollection sets = db.getCollection(RESULTSET_META_COLLECTION);
+        DBObject query = new BasicDBObject("_id", resultSetId);
+
+        assert sets.find(query).count() == 0 : "The recordset is not in database";
+        assert db.getCollectionNames().contains(RESULTSET_COLLECTION_PREFIX + resultSetId) : "The recordset is not in database";
+
+        DBCollection collection = db.getCollection(RESULTSET_COLLECTION_PREFIX + resultSetId);
+
+        DBCursor cursor = collection.find();
+
+        BasicDBObject tmp;
+
+        while (cursor.hasNext()) {
+            tmp = (BasicDBObject) cursor.next();
+            results.add(new Result(tmp));
+        }
+
+        return results;
+    }
+
+    public List<Result> getResults(String resultSetId, String taxonomy) {
+        assert resultSetId != null;
+        assert !resultSetId.isEmpty();
+
+        List<Result> results = new LinkedList<Result>();
+
+        DBCollection sets = db.getCollection(RESULTSET_META_COLLECTION);
+        DBObject query = new BasicDBObject("_id", resultSetId);
+
+        assert sets.find(query).count() == 0 : "The recordset is not in database";
+        assert db.getCollectionNames().contains(RESULTSET_COLLECTION_PREFIX + resultSetId) : "The recordset is not in database";
+
+        DBCollection collection = db.getCollection(RESULTSET_COLLECTION_PREFIX + resultSetId);
+        DBObject queryTax = new BasicDBObject(Result.FIELD_TAXONOMYKEY, taxonomy);
+
+        DBCursor cursor = collection.find(queryTax);
+
+        BasicDBObject tmp;
+
+        while (cursor.hasNext()) {
+            tmp = (BasicDBObject) cursor.next();
+            results.add(new Result(tmp));
+        }
+
+        return results;
+    }
+
+//    public List<Result> getResults(String id){
+//        
+//    }
+    @Deprecated
+    public List<Record> getResults(String taxonomyKey, Boolean old) {
         DBCollection result = db.getCollection("result_1");
 
 //        Log.start("fetching results matching '" + taxonomyKey + "'");
@@ -162,11 +243,14 @@ public class Persistence {
         return matches;
     }
 
+    /**
+     * Deletes everything!
+     */
     public void clear() {
-        DBCollection result = db.getCollection("result_1");
-        result.drop();
+        db.dropDatabase();
     }
 
+    @Deprecated
     public void storeResult(List<Result> data) {
         DBCollection result = db.getCollection("result_1");
         result.ensureIndex(Result.FIELD_TAXONOMYKEY);

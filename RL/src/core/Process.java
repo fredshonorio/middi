@@ -296,7 +296,7 @@ public class Process {
 	record = inputSet.iterator().next();
 
 	assert record.hasTaxonomy();
-	List<Record> taxMatches = db.fetchResult(record.getTaxonomy());
+	List<Record> taxMatches = null; //db.fetchResult(record.getTaxonomy());
 
 	RecordSet taxonomySet = new RecordSet(schema).add(taxMatches);
 	RecordSet single = new RecordSet(schema).add(record);

@@ -60,9 +60,9 @@ public class Record implements Iterable<String> {
         assert obj.containsField(FIELD_SOURCEID);
         sourceId = obj.getString(FIELD_SOURCEID);
 
-        assert obj.size() == schema.length() + 2; //TODO : improve
+//        assert obj.size() == schema.length() +2 : obj.toString() + "!= " + Arrays.toString(fieldValues); //TODO : improve
         for (int i = 0; i < schema.length(); i++) {
-            assert obj.containsField(schema.getName(i));
+            assert obj.containsField(schema.getName(i)) : "No field " + schema.getName(i);
             fieldValues[i] = obj.getString(schema.getName(i));
         }
 
@@ -153,8 +153,9 @@ public class Record implements Iterable<String> {
         return this;
     }
 
-    public void setTaxonomy(String taxonomy) {
+    public Record setTaxonomy(String taxonomy) {
         this.taxonomy = taxonomy;
+        return this;
     }
 
     public BasicDBObject toDBObject() {
