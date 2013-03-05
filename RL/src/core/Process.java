@@ -1,5 +1,6 @@
 package core;
 
+import log.Log;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
