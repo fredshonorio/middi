@@ -4,10 +4,11 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
-public class Record {
+public class Record implements Iterable<String> {
 
     public final static String FIELD_INTERNAL_ID = "_id";
     public final static String FIELD_SOURCEID = "sourceId";
@@ -15,6 +16,37 @@ public class Record {
     public final Schema schema;
     private String sourceId = null;
     private String taxonomy = null;
+
+    @Override
+    public Iterator<String> iterator() {
+        return new RecordIterator(fieldValues);
+    }
+
+    private class RecordIterator implements Iterator<String> {
+
+        private int i = 0;
+        private String[] fieldValues;
+
+        public RecordIterator(String[] fieldValues) {
+            this.fieldValues = fieldValues;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return i < fieldValues.length;
+        }
+
+        @Override
+        public String next() {
+            assert hasNext();
+            return fieldValues[i++];
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    }
 
     protected Record(Schema schema) {
         this.schema = schema;
@@ -27,7 +59,7 @@ public class Record {
 
         assert obj.containsField(FIELD_SOURCEID);
         sourceId = obj.getString(FIELD_SOURCEID);
-        
+
         assert obj.size() == schema.length() + 2; //TODO : improve
         for (int i = 0; i < schema.length(); i++) {
             assert obj.containsField(schema.getName(i));
