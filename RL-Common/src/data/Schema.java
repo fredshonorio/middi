@@ -15,7 +15,7 @@ public class Schema {
 
     public Schema() {
     }
-    
+
     public ArrayList<String> getFieldNames() {
         return fieldNames;
     }
@@ -23,7 +23,7 @@ public class Schema {
     public void setFieldNames(ArrayList<String> fieldNames) {
         this.fieldNames = fieldNames;
     }
-    
+
     public int getIndex(String fieldName) {
         for (int i = 0; i < fieldNames.size(); i++) {
             if (fieldNames.get(i).equals(fieldName)) {
@@ -31,5 +31,13 @@ public class Schema {
             }
         }
         return -1;
+    }
+
+    public String getName(int index) {
+        return fieldNames.get(index);
+    }
+
+    public int size() {
+        return fieldNames.size();
     }
 }

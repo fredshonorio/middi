@@ -27,6 +27,10 @@ public class Record implements Iterable<String> {
         return fieldValues;
     }
 
+    public String getValue(int index) {
+        return fieldValues.get(index);
+    }
+
     public void setFieldValues(ArrayList<String> fieldValues) {
         this.fieldValues = fieldValues;
     }
