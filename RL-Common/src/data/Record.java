@@ -2,6 +2,8 @@ package data;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import util.ExpandingArrayList;
 
 /**
  *
@@ -9,12 +11,12 @@ import java.util.Iterator;
  */
 public class Record implements Iterable<String> {
 
-    private ArrayList<String> fieldValues;
+    private ExpandingArrayList<String> fieldValues;
     private String sourceId;
     private String taxonomy;
 
-    public Record(ArrayList<String> fieldValues, String sourceId, String taxonomy) {
-        this.fieldValues = fieldValues;
+    public Record(List<String> fieldValues, String sourceId, String taxonomy) {
+        this.fieldValues = new ExpandingArrayList<String>(fieldValues);
         this.sourceId = sourceId;
         this.taxonomy = taxonomy;
     }
@@ -22,7 +24,7 @@ public class Record implements Iterable<String> {
     public Record() {
     }
 
-    public Record(ArrayList<String> fieldValues) {
+    public Record(ExpandingArrayList<String> fieldValues) {
         this.fieldValues = fieldValues;
     }
 
@@ -34,7 +36,11 @@ public class Record implements Iterable<String> {
         return fieldValues.get(index);
     }
 
-    public void setFieldValues(ArrayList<String> fieldValues) {
+    public void setValue(int index, String value) {
+        fieldValues.set(index, value);
+    }
+
+    public void setFieldValues(ExpandingArrayList<String> fieldValues) {
         this.fieldValues = fieldValues;
     }
 
