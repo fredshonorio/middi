@@ -2,43 +2,53 @@ package data;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
-public class RecordSet implements Iterable<Record> {
+/**
+ *
+ * @author Frederico Honório <fredericohonorio@ua.pt>
+ */
+public class RecordSet implements Iterable<Record>{
 
-    public final Schema schema;
-
-    public final LinkedList<Record> records = new LinkedList<Record>();
+    private Schema schema;
+    private LinkedList<Record> records;
 
     public RecordSet(Schema schema) {
-	assert schema != null;
-	this.schema = schema;
+        this.schema = schema;
+        this.records = new LinkedList<Record>();
     }
 
-    public RecordSet add(Record record) {
-	assert record != null;
-	assert !record.isPartial();
-	assert schema.equals(record.schema);
-	records.add(record);
-	return this;
+    public RecordSet() {
     }
 
-    public RecordSet add(List<Record> records) {
-	assert records != null;
-
-	for (Record r : records) {
-	    add(r);
-	}
-
-	return this;
+    public void add(Record record) {
+        assert matchSchema(record);
+        records.add(record);
     }
 
+    public boolean matchSchema(Record record) {
+        return record.getFieldValues().size() == schema.getFieldNames().size();
+    }
+
+    public Schema getSchema() {
+        return schema;
+    }
+
+    public void setSchema(Schema schema) {
+        this.schema = schema;
+    }
+
+    public LinkedList<Record> getRecords() {
+        return records;
+    }
+
+    public void setRecords(LinkedList<Record> records) {
+        this.records = records;
+    }
+
+    @Override
     public Iterator<Record> iterator() {
-	return records.iterator();
+        return records.iterator();
     }
-
-    public int size() {
-	return records.size();
-    }
-
+    
+    
 }
