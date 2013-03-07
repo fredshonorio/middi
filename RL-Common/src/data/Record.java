@@ -9,31 +9,6 @@ import java.util.Iterator;
  */
 public class Record implements Iterable<String> {
 
-    private class RecordIterator implements Iterator<String> {
-
-        private int i = 0;
-        private ArrayList<String> fieldValues;
-
-        public RecordIterator(ArrayList<String> fieldValues) {
-            this.fieldValues = fieldValues;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return i < fieldValues.size();
-        }
-
-        @Override
-        public String next() {
-            assert hasNext();
-            return fieldValues.get(i++);
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-    }
     private ArrayList<String> fieldValues;
     private String sourceId;
     private String taxonomy;
@@ -74,6 +49,6 @@ public class Record implements Iterable<String> {
 
     @Override
     public Iterator<String> iterator() {
-        return new RecordIterator(this.fieldValues);
+        return fieldValues.iterator();
     }
 }
