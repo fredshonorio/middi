@@ -19,6 +19,9 @@ public class Record implements Iterable<String> {
         this.taxonomy = taxonomy;
     }
 
+    public Record() {
+    }
+
     public Record(ArrayList<String> fieldValues) {
         this.fieldValues = fieldValues;
     }
