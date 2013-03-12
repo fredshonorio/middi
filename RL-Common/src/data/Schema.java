@@ -1,43 +1,37 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Frederico Honório <fredericohonorio@ua.pt>
  */
-public class Schema {
+public class Schema implements Iterable<String> {
 
-    private ArrayList<String> fieldNames;
-
-    public Schema(ArrayList<String> fieldNames) {
-        this.fieldNames = fieldNames;
-    }
+    protected List<String> fieldNames;
 
     public Schema() {
     }
 
-    public ArrayList<String> getFieldNames() {
-        return fieldNames;
+    public Schema(List<String> fieldNames) {
+        this.fieldNames = new ArrayList<String>(fieldNames);
     }
 
-    public void setFieldNames(ArrayList<String> fieldNames) {
+    public List<String> getFieldNames() {
+        if (fieldNames == null) {
+            fieldNames = new ArrayList<String>();
+        }
+        return this.fieldNames;
+    }
+
+    public void setFieldNames(List<String> fieldNames) {
         this.fieldNames = fieldNames;
     }
 
-    public int getIndex(String fieldName) {
-        for (int i = 0; i < fieldNames.size(); i++) {
-            if (fieldNames.get(i).equals(fieldName)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public String getName(int index) {
-        return fieldNames.get(index);
-    }
-
-    public int size() {
-        return fieldNames.size();
+    @Override
+    public Iterator<String> iterator() {
+        return fieldNames.iterator();
     }
 }

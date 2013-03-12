@@ -3,7 +3,6 @@ package data;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import util.ExpandingArrayList;
 
 /**
  *
@@ -11,36 +10,21 @@ import util.ExpandingArrayList;
  */
 public class Record implements Iterable<String> {
 
-    private ExpandingArrayList<String> fieldValues;
-    private String sourceId;
-    private String taxonomy;
-
-    public Record(List<String> fieldValues, String sourceId, String taxonomy) {
-        this.fieldValues = new ExpandingArrayList<String>(fieldValues);
-        this.sourceId = sourceId;
-        this.taxonomy = taxonomy;
-    }
+    protected List<String> fieldValues;
+    protected String sourceId;
+    protected String taxonomy;
 
     public Record() {
     }
 
-    public Record(ExpandingArrayList<String> fieldValues) {
-        this.fieldValues = fieldValues;
-    }
-
-    public ArrayList<String> getFieldValues() {
+    public List<String> getFieldValues() {
+        if (fieldValues == null) {
+            fieldValues = new ArrayList<String>();
+        }
         return fieldValues;
     }
 
-    public String getValue(int index) {
-        return fieldValues.get(index);
-    }
-
-    public void setValue(int index, String value) {
-        fieldValues.set(index, value);
-    }
-
-    public void setFieldValues(ExpandingArrayList<String> fieldValues) {
+    public void setFieldValues(List<String> fieldValues) {
         this.fieldValues = fieldValues;
     }
 

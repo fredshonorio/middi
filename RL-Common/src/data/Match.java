@@ -6,8 +6,8 @@ package data;
  */
 public class Match {
 
-    private Record matchingRecord;
-    private double score;
+    protected Record matchingRecord;
+    protected double score;
 
     public Match(Record matchingRecord, double score) {
         this.matchingRecord = matchingRecord;

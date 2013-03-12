@@ -2,15 +2,16 @@ package data;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
  * @author Frederico Honório <fredericohonorio@ua.pt>
  */
-public class RecordSet implements Iterable<Record>{
+public class RecordSet implements Iterable<Record> {
 
-    private Schema schema;
-    private LinkedList<Record> records;
+    protected Schema schema;
+    protected List<Record> records;
 
     public RecordSet(Schema schema) {
         this.schema = schema;
@@ -18,15 +19,6 @@ public class RecordSet implements Iterable<Record>{
     }
 
     public RecordSet() {
-    }
-
-    public void add(Record record) {
-        assert matchSchema(record);
-        records.add(record);
-    }
-
-    public boolean matchSchema(Record record) {
-        return record.getFieldValues().size() == schema.getFieldNames().size();
     }
 
     public Schema getSchema() {
@@ -37,18 +29,32 @@ public class RecordSet implements Iterable<Record>{
         this.schema = schema;
     }
 
-    public LinkedList<Record> getRecords() {
+    public List<Record> getRecords() {
+        if (records == null) {
+            records = new LinkedList<Record>();
+        }
         return records;
     }
 
-    public void setRecords(LinkedList<Record> records) {
+    public void setRecords(List<Record> records) {
         this.records = records;
+    }
+
+    public void add(Record record) {
+//        assert matchSchema(record);
+        if (records == null) {
+            getRecords();
+        }
+        
+        records.add(record);
+    }
+
+    public boolean matchSchema(Record record) {
+        return record.getFieldValues().size() == schema.getFieldNames().size();
     }
 
     @Override
     public Iterator<Record> iterator() {
         return records.iterator();
     }
-    
-    
 }
