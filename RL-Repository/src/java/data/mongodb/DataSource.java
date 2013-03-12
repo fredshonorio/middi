@@ -1,7 +1,7 @@
 /**
  * 
  */
-package data.persistence.mongodb;
+package data.mongodb;
 
 import data.Schema;
 import java.util.ArrayList;

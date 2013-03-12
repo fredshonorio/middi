@@ -1,7 +1,7 @@
-package data.persistence.mongodb;
+package data.mongodb;
 
+import data.IRepository;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +9,7 @@ import data.RecordSet;
 import data.Match;
 import data.Record;
 import data.Schema;
+import data.Result;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -16,11 +17,12 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import data.Result;
+import com.mongodb.MongoException;
+import com.mongodb.WriteConcern;
 
 import org.bson.types.ObjectId;
 
-public class Persistence {
+public class Persistence implements IRepository {
 
     private final static String RESULTSET_META_COLLECTION = "resultsets";
     private final static String RESULTSET_COLLECTION_PREFIX = "resultSet_";
@@ -36,13 +38,14 @@ public class Persistence {
         }
 
         return instance;
-
     }
 
     private Persistence() {
+
         if (mongoClient == null) {
             try {
                 mongoClient = new MongoClient("localhost", 27017);
+                mongoClient.setWriteConcern(WriteConcern.SAFE);
             } catch (UnknownHostException e) {
                 System.exit(0);
             }
@@ -52,18 +55,15 @@ public class Persistence {
     }
 
     public boolean checkDb() {
-        //TODO: try to implement once mongo updates
-//        try {
-//            mongoClient.getDatabaseNames();
-//        } catch (MongoException e) {
-//            return false;
-//        } catch (Exception e) {
-//            System.out.println("wat");
-//            return false;
-//        } catch (Error e) {
-//            System.out.println("wat");
-//            return false;
-//        }
+        try {
+            mongoClient.getDatabaseNames();
+        } catch (MongoException e) {
+            return false;
+        } catch (Exception e) {
+            return false;
+        } catch (Error e) {
+            return false;
+        }
         return true;
     }
 
@@ -72,6 +72,7 @@ public class Persistence {
 //        mongoClient.close();
     }
 
+    @Override
     public String test(Record record, Schema schema) {
         DBCollection sets = db.getCollection("testing");
 
@@ -87,6 +88,7 @@ public class Persistence {
      * @param recordSet the recordset
      * @return The ID of the RecordSet
      */
+    @Override
     public String storeRecordSet(RecordSet recordSet) {
         assert recordSet != null;
 
@@ -106,15 +108,26 @@ public class Persistence {
         return id;
     }
 
+    @Override
     public List<Record> getRecords(String recordSetId) {
-        return getRecords(recordSetId, 0, Integer.MAX_VALUE); //TODO: fix
+        return getRecords(recordSetId, 0, 0);
     }
 
+    /**
+     * Fetches records from the database.
+     *
+     * @param recordSetId The id of the recordSet.
+     * @param offset The number of the first record.
+     * @param size The number of records after the first. If this number is 0 it
+     * will fetch all the remaining records.
+     * @return
+     */
+    @Override
     public List<Record> getRecords(String recordSetId, int offset, int size) {
         assert recordSetId != null;
         assert !recordSetId.isEmpty();
         assert offset >= 0;
-        assert size > 0;
+        assert size >= 0;
 
         List<Record> records = new LinkedList<Record>();
 
@@ -126,7 +139,10 @@ public class Persistence {
 
         DBCollection collection = db.getCollection(RECORDSET_COLLECTION_PREFIX + recordSetId);
 
-        DBCursor cursor = collection.find().skip(offset).limit(size);
+        DBCursor cursor = collection.find().skip(offset);
+        if (size > 0) {
+            cursor = cursor.limit(size);
+        }
 
         Schema tSchema = null;
         BasicDBObject tmp;
@@ -141,6 +157,7 @@ public class Persistence {
         return records;
     }
 
+    @Override
     public String storeResults(List<Result> results, Schema schema) {
         assert results != null;
         assert !results.isEmpty();
@@ -163,6 +180,7 @@ public class Persistence {
         return id;
     }
 
+    @Override
     public List<Result> getResults(String resultSetId) {
         assert resultSetId != null;
         assert !resultSetId.isEmpty();
@@ -189,6 +207,7 @@ public class Persistence {
         return results;
     }
 
+    @Override
     public List<Result> getResults(String resultSetId, String taxonomy) {
         assert resultSetId != null;
         assert !resultSetId.isEmpty();

@@ -1,4 +1,4 @@
-package data.persistence.mongodb;
+package data.mongodb;
 
 import java.util.ArrayList;
 import java.util.List;

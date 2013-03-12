@@ -1,4 +1,4 @@
-package data.persistence.mongodb;
+package data.mongodb;
 
 import data.Schema;
 import com.mongodb.BasicDBObject;
@@ -18,15 +18,21 @@ public class DBRecord {
         assert obj.containsField(FIELD_SOURCEID);
         String id = obj.getString(FIELD_SOURCEID);
 
-        ArrayList<String> values = new ArrayList<String>(schema.size());
+        int size = schema.getFieldNames().size();
 
-        assert obj.size() == schema.size() + 2;// : obj.toString()+ "!= " + Arrays.toString(fieldValues); //TODO : improve
-        for (int i = 0; i < schema.size(); i++) {
-            assert obj.containsField(schema.getName(i)) : "No field " + schema.getName(i);
-            values.set(i, obj.getString(schema.getName(i)));
+        ArrayList<String> values = new ArrayList<String>(size);
+
+        assert obj.size() == size + 2;// : obj.toString()+ "!= " + Arrays.toString(fieldValues); //TODO : improve
+        for (int i = 0; i < size; i++) {
+            assert obj.containsField(schema.getFieldNames().get(i)) : "No field " + schema.getFieldNames().get(i);
+            values.add(i, obj.getString(schema.getFieldNames().get(i)));
         }
 
-        return new Record(values, id, null);
+        Record rec = new Record();
+        rec.setFieldValues(values);
+        rec.setSourceId(id);
+
+        return rec;
     }
 
     public static Record fromDBObject(BasicDBObject obj) {
@@ -52,14 +58,15 @@ public class DBRecord {
     }
 
     public static BasicDBObject toDBObject(Record record, Schema schema) {
-        //TODO: validade sourceId
-        BasicDBObject obj = new BasicDBObject(schema.size() + 1);
+        //TODO: validate sourceId
+        int size = schema.getFieldNames().size();
+        BasicDBObject obj = new BasicDBObject(size + 1);
 
         obj.append(FIELD_SOURCEID, record.getSourceId());
 
-        for (int i = 0; i < schema.size(); i++) {
-            String fiedlName = schema.getName(i);
-            obj.append(fiedlName, record.getValue(i));
+        for (int i = 0; i < size; i++) {
+            String fiedlName = schema.getFieldNames().get(i);
+            obj.append(fiedlName, record.getFieldValues().get(i)); //getValue(i)
         }
 
         return obj;

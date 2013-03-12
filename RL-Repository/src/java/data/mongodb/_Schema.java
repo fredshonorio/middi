@@ -1,4 +1,4 @@
-package data.persistence.mongodb;
+package data.mongodb;
 
 import data.Record;
 import data.Schema;

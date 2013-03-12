@@ -2,12 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package data.persistence;
+package data;
 
 import data.Record;
 import data.RecordSet;
 import data.Schema;
-import data.persistence.mongodb.Persistence;
+import data.mongodb.Persistence;
+import java.util.List;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -20,27 +21,38 @@ import javax.jws.WebParam;
 public class Repository {
 
     /**
-     * This is a sample web service operation
-     */
-    @WebMethod(operationName = "hello")
-    public String hello(@WebParam(name = "name") String txt) {
-        return "Hello " + txt + " !";
-    }
-
-    /**
      * Web service operation
      */
     @WebMethod(operationName = "storeRecordSet")
     public String storeRecordSet(@WebParam(name = "recordSet") RecordSet recordSet) {
-        //TODO write your implementation code here:
-        return null;
+        Persistence p = Persistence.instance();
+        if (!p.checkDb()) {
+            //problems!
+        }
+        return p.storeRecordSet(recordSet);
     }
 
     /**
      * Web service operation
      */
-    @WebMethod(operationName = "test")
-    public String test(@WebParam(name = "schema") Schema schema, @WebParam(name = "record") Record record) {
-        return Persistence.instance().test(record, schema);
+    @WebMethod(operationName = "getRecords")
+    public List<Record> getRecords(@WebParam(name = "recordSetId") String recordSetId) {
+        Persistence p = Persistence.instance();
+        if (!p.checkDb()) {
+            //problems!
+        }
+        return p.getRecords(recordSetId);
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "getResults")
+    public java.util.List<Result> getResults(@WebParam(name = "resultSetId") String resultSetId, @WebParam(name = "taxonomy") String taxonomy) {
+        Persistence p = Persistence.instance();
+        if (!p.checkDb()) {
+            //problems!
+        }
+        return p.getResults(resultSetId, taxonomy);
     }
 }
