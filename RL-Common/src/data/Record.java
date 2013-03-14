@@ -1,6 +1,7 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,6 +16,15 @@ public class Record implements Iterable<String> {
     protected String taxonomy;
 
     public Record() {
+    }
+
+    public Record(String sourceId, String... fieldValues) {
+        this.fieldValues = new ArrayList<String>(fieldValues.length);
+
+        for (String value : fieldValues) {
+            this.fieldValues.add(value);
+        }
+        this.sourceId = sourceId;
     }
 
     public List<String> getFieldValues() {
@@ -47,5 +57,10 @@ public class Record implements Iterable<String> {
     @Override
     public Iterator<String> iterator() {
         return fieldValues.iterator();
+    }
+
+    @Override
+    public String toString() {
+        return "Record{" + "fieldValues=" + fieldValues.toString() + ", sourceId=" + sourceId + ", taxonomy=" + taxonomy + '}';
     }
 }

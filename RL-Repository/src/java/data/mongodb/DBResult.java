@@ -46,14 +46,13 @@ public class DBResult {
 
     public static BasicDBObject toDBObject(Result result, Schema schema) {
         
-        
         BasicDBObject obj = new BasicDBObject();
         obj.append(FIELD_REFERENCERECORD, DBRecord.toDBObject(result.getReferenceRecord(), schema));
 
         ArrayList<BasicDBObject> matchList = new ArrayList<BasicDBObject>(result.getMatches().size());
 
         for (Match match : result.getMatches()) {
-            matchList.add(DBRecord.toDBObject(match.getMatchingRecord(), schema));
+            matchList.add(DBMatch.toDBOject(match, schema));
         }
         obj.append(FIELD_MATCHES, matchList);
 

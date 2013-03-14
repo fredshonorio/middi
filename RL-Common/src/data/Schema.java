@@ -10,13 +10,13 @@ import java.util.List;
  */
 public class Schema implements Iterable<String> {
 
-    protected List<String> fieldNames;
+    private List<String> fieldNames;
 
     public Schema() {
     }
 
-    public Schema(List<String> fieldNames) {
-        this.fieldNames = new ArrayList<String>(fieldNames);
+    public Schema(String... fieldNames) {
+        this.fieldNames = new ArrayList<String>(Arrays.asList(fieldNames));
     }
 
     public List<String> getFieldNames() {
@@ -33,5 +33,9 @@ public class Schema implements Iterable<String> {
     @Override
     public Iterator<String> iterator() {
         return fieldNames.iterator();
+    }
+    @Override
+    public String toString(){
+        return fieldNames.toString();
     }
 }

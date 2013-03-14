@@ -8,14 +8,6 @@ import java.util.List;
  */
 public interface IRepository {
 
-    List<Record> getRecords(String recordSetId);
-
-    List<Record> getRecords(String recordSetId, int offset, int size);
-
-    List<Result> getResults(String resultSetId);
-
-    List<Result> getResults(String resultSetId, String taxonomy);
-
     /**
      * Adds the recordset to storage.
      *
@@ -24,9 +16,15 @@ public interface IRepository {
      */
     String storeRecordSet(RecordSet recordSet);
 
-    @Deprecated
-//    void storeResult(List<DBResult> data);
+    List<Record> getAllRecords(String recordSetId);
 
+    List<Record> getRecords(String recordSetId, int offset, int size);
+
+    List<Result> getAllResults(String resultSetId);
+
+    List<Result> getTaxonomyResults(String resultSetId, String taxonomy);
+
+    @Deprecated
     String storeResults(List<Result> results, Schema schema);
 
     String test(Record record, Schema schema);

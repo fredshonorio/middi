@@ -4,9 +4,9 @@ import java.util.List;
 
 public class Result {
 
-    public static final String FIELD_REFERENCERECORD = "referenceRecord";
-    public static final String FIELD_MATCHES = "matches";
-    public static final String FIELD_TAXONOMYKEY = "taxonomyKey";
+//    public static final String FIELD_REFERENCERECORD = "referenceRecord";
+//    public static final String FIELD_MATCHES = "matches";
+//    public static final String FIELD_TAXONOMYKEY = "taxonomyKey";
     private Record referenceRecord; // the reference record
     private List<Match> matches; // the matching records
     private String taxonomyKey; // the taxonomy key of the reference

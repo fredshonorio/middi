@@ -73,7 +73,14 @@
     -->
     
     <!-- ,wsimport-client-generate -->
+    
+    <target name="wsimport-client-generate" depends="wsimport-client-Repository">
+        <delete file="/build/generated-sources/jax-ws/data/Record.java"/>
+    </target>
+      
+      
     <target name="-pre-pre-compile" depends="init,deps-jar">
+        
         <mkdir dir="${build.classes.dir}"/>
     </target>
 </project>

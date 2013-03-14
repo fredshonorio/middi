@@ -14,6 +14,8 @@ public class DBRecord {
     public static Record fromDBObject(BasicDBObject obj, Schema schema) {
         assert !obj.isEmpty();
         assert !obj.isPartialObject();
+        
+        System.out.println(obj);
 
         assert obj.containsField(FIELD_SOURCEID);
         String id = obj.getString(FIELD_SOURCEID);
@@ -54,7 +56,7 @@ public class DBRecord {
             }
         }
 
-        return new Schema(tmpSchema);
+        return new Schema(tmpSchema.toArray(new String[tmpSchema.size()]));
     }
 
     public static BasicDBObject toDBObject(Record record, Schema schema) {

@@ -1,4 +1,4 @@
-package test_repo;
+package ua.pt.middi;
 
 import data.IRepository;
 import data.Record;
@@ -24,23 +24,23 @@ public class RepositoryClient implements IRepository {
     }
 
     @Override
-    public List<Record> getRecords(String recordSetId) {
-        return repository.getRecords(recordSetId);
+    public List<Record> getAllRecords(String recordSetId) {
+        return repository.getAllRecords(recordSetId);
     }
 
     @Override
     public List<Record> getRecords(String recordSetId, int offset, int size) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return repository.getRecords(recordSetId, offset, size);
     }
 
     @Override
-    public List<Result> getResults(String resultSetId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Result> getAllResults(String resultSetId) {
+        return repository.getAllResults(resultSetId);
     }
 
     @Override
-    public List<Result> getResults(String resultSetId, String taxonomy) {
-        return repository.getResults(resultSetId, taxonomy);
+    public List<Result> getTaxonomyResults(String resultSetId, String taxonomy) {
+        return repository.getTaxonomyResults(resultSetId, taxonomy);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class RepositoryClient implements IRepository {
 
     @Override
     public String storeResults(List<Result> results, Schema schema) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return repository.storeResults(results, schema);
     }
 
     @Override

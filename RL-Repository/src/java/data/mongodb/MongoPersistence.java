@@ -22,7 +22,7 @@ import com.mongodb.WriteConcern;
 
 import org.bson.types.ObjectId;
 
-public class Persistence implements IRepository {
+public class MongoPersistence implements IRepository {
 
     private final static String RESULTSET_META_COLLECTION = "resultsets";
     private final static String RESULTSET_COLLECTION_PREFIX = "resultSet_";
@@ -30,17 +30,17 @@ public class Persistence implements IRepository {
     private final static String RECORDSET_COLLECTION_PREFIX = "recordSet_";
     private DB db;
     private static MongoClient mongoClient = null;
-    private static Persistence instance;
+    private static MongoPersistence instance;
 
-    public static Persistence instance() {
+    public static MongoPersistence instance() {
         if (instance == null) {
-            instance = new Persistence();
+            instance = new MongoPersistence();
         }
 
         return instance;
     }
 
-    private Persistence() {
+    private MongoPersistence() {
 
         if (mongoClient == null) {
             try {
@@ -109,7 +109,7 @@ public class Persistence implements IRepository {
     }
 
     @Override
-    public List<Record> getRecords(String recordSetId) {
+    public List<Record> getAllRecords(String recordSetId) {
         return getRecords(recordSetId, 0, 0);
     }
 
@@ -181,7 +181,7 @@ public class Persistence implements IRepository {
     }
 
     @Override
-    public List<Result> getResults(String resultSetId) {
+    public List<Result> getAllResults(String resultSetId) {
         assert resultSetId != null;
         assert !resultSetId.isEmpty();
 
@@ -208,7 +208,7 @@ public class Persistence implements IRepository {
     }
 
     @Override
-    public List<Result> getResults(String resultSetId, String taxonomy) {
+    public List<Result> getTaxonomyResults(String resultSetId, String taxonomy) {
         assert resultSetId != null;
         assert !resultSetId.isEmpty();
 
@@ -235,65 +235,10 @@ public class Persistence implements IRepository {
         return results;
     }
 
-//    public List<Result> getResults(String id){
-//        
-//    }
-    @Deprecated
-    public List<Record> getResults(String taxonomyKey, Boolean old) {
-        DBCollection result = db.getCollection("result_1");
-
-//        Log.start("fetching results matching '" + taxonomyKey + "'");
-
-        BasicDBObject query = new BasicDBObject(DBResult.FIELD_TAXONOMYKEY, taxonomyKey);
-
-        DBCursor c = result.find(query);
-
-        DBObject tmp;
-        int rCount = 0;
-
-        List<Record> matches = new LinkedList<Record>();
-
-        DBResult rFetched;
-        while (c.hasNext()) {
-//            tmp = c.next();
-//
-//            rFetched = new Result((BasicDBObject) tmp, schema);
-//
-//            matches.add(rFetched.referenceRecord);
-//            rCount++;
-//
-//            for (Match m : rFetched.matches) {
-//                matches.add(m.matchingRecord);
-//                rCount++;
-//            }
-        }
-
-//        Log.stop("fetching results matching '" + taxonomyKey + "'");
-//        Log.log(rCount + " records fetched.");
-
-        return matches;
-    }
-
     /**
      * Deletes everything!
      */
     public void clear() {
         db.dropDatabase();
-    }
-
-    @Deprecated
-    public void storeResult(List<DBResult> data) {
-        DBCollection result = db.getCollection("result_1");
-        result.ensureIndex(DBResult.FIELD_TAXONOMYKEY);
-
-//        Log.start("storing result");
-
-        for (DBResult d : data) {
-//            result.insert(d.toDBObject());
-//            result.insert(DBResult.toDBObject(null, schema)toDBObject());
-        }
-
-//        Log.stop("storixng result");
-
     }
 }

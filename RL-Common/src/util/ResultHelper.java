@@ -34,15 +34,16 @@ public class ResultHelper {
         buff.append('[');
         buff.append("reference: ");
         buff.append(h.toString(result.getReferenceRecord()));
+        buff.append(" taxonomy: ");
+        buff.append(result.getTaxonomyKey());
+        for (Match match : result.getMatches()) {
+            buff.append("\n\t match: [ record: ");
+            buff.append(h.toString(match.getMatchingRecord()));
+            buff.append(" score: ");
+            buff.append(match.getScore());
+            buff.append(']');
+        }
         buff.append('\n');
-        buff.append('{');
-//        for (Match match : result.getMatches()) {
-//            buff.append(" match: [ record: ");
-//            buff.append(h.toString(match.getMatchingRecord()));
-//            buff.append(" score: ");
-//            buff.append(match.getScore());
-//            buff.append(']');
-//        }
         buff.append('}');
         buff.append(']');
         return buff;

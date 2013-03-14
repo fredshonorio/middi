@@ -60,6 +60,7 @@ public final class RecordHelper {
         return -1;
     }
 
+//    @Deprecated
     public Record newRecord(String sourceId, String... fieldValues) {
         assert fieldValues.length == size;
 
@@ -100,7 +101,11 @@ public final class RecordHelper {
         for (int i = 0; i < size; i++) {
             buff.append(schema.getFieldNames().get(i));
             buff.append(": \"");
-            buff.append(record.getFieldValues().get(i));
+            if (record.getFieldValues().size() > i) {
+                buff.append(record.getFieldValues().get(i));
+            } else {
+                buff.append("NULL");
+            }
             buff.append('\"');
 
             if (i != size - 1) {

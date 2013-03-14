@@ -4,17 +4,17 @@
 <xsd:import namespace="http://data/" schemaLocation="http://localhost:8080/RL-Repository/Repository?xsd=1"/>
 </xsd:schema>
 </types>
+<message name="getAllResults">
+<part name="parameters" element="tns:getAllResults"/>
+</message>
+<message name="getAllResultsResponse">
+<part name="parameters" element="tns:getAllResultsResponse"/>
+</message>
 <message name="storeRecordSet">
 <part name="parameters" element="tns:storeRecordSet"/>
 </message>
 <message name="storeRecordSetResponse">
 <part name="parameters" element="tns:storeRecordSetResponse"/>
-</message>
-<message name="getResults">
-<part name="parameters" element="tns:getResults"/>
-</message>
-<message name="getResultsResponse">
-<part name="parameters" element="tns:getResultsResponse"/>
 </message>
 <message name="getRecords">
 <part name="parameters" element="tns:getRecords"/>
@@ -22,22 +22,61 @@
 <message name="getRecordsResponse">
 <part name="parameters" element="tns:getRecordsResponse"/>
 </message>
+<message name="getAllRecords">
+<part name="parameters" element="tns:getAllRecords"/>
+</message>
+<message name="getAllRecordsResponse">
+<part name="parameters" element="tns:getAllRecordsResponse"/>
+</message>
+<message name="storeResults">
+<part name="parameters" element="tns:storeResults"/>
+</message>
+<message name="storeResultsResponse">
+<part name="parameters" element="tns:storeResultsResponse"/>
+</message>
+<message name="getTaxonomyResults">
+<part name="parameters" element="tns:getTaxonomyResults"/>
+</message>
+<message name="getTaxonomyResultsResponse">
+<part name="parameters" element="tns:getTaxonomyResultsResponse"/>
+</message>
 <portType name="Repository">
+<operation name="getAllResults">
+<input wsam:Action="http://data/Repository/getAllResultsRequest" message="tns:getAllResults"/>
+<output wsam:Action="http://data/Repository/getAllResultsResponse" message="tns:getAllResultsResponse"/>
+</operation>
 <operation name="storeRecordSet">
 <input wsam:Action="http://data/Repository/storeRecordSetRequest" message="tns:storeRecordSet"/>
 <output wsam:Action="http://data/Repository/storeRecordSetResponse" message="tns:storeRecordSetResponse"/>
-</operation>
-<operation name="getResults">
-<input wsam:Action="http://data/Repository/getResultsRequest" message="tns:getResults"/>
-<output wsam:Action="http://data/Repository/getResultsResponse" message="tns:getResultsResponse"/>
 </operation>
 <operation name="getRecords">
 <input wsam:Action="http://data/Repository/getRecordsRequest" message="tns:getRecords"/>
 <output wsam:Action="http://data/Repository/getRecordsResponse" message="tns:getRecordsResponse"/>
 </operation>
+<operation name="getAllRecords">
+<input wsam:Action="http://data/Repository/getAllRecordsRequest" message="tns:getAllRecords"/>
+<output wsam:Action="http://data/Repository/getAllRecordsResponse" message="tns:getAllRecordsResponse"/>
+</operation>
+<operation name="storeResults">
+<input wsam:Action="http://data/Repository/storeResultsRequest" message="tns:storeResults"/>
+<output wsam:Action="http://data/Repository/storeResultsResponse" message="tns:storeResultsResponse"/>
+</operation>
+<operation name="getTaxonomyResults">
+<input wsam:Action="http://data/Repository/getTaxonomyResultsRequest" message="tns:getTaxonomyResults"/>
+<output wsam:Action="http://data/Repository/getTaxonomyResultsResponse" message="tns:getTaxonomyResultsResponse"/>
+</operation>
 </portType>
 <binding name="RepositoryPortBinding" type="tns:Repository">
 <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+<operation name="getAllResults">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
 <operation name="storeRecordSet">
 <soap:operation soapAction=""/>
 <input>
@@ -47,7 +86,7 @@
 <soap:body use="literal"/>
 </output>
 </operation>
-<operation name="getResults">
+<operation name="getRecords">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
@@ -56,7 +95,25 @@
 <soap:body use="literal"/>
 </output>
 </operation>
-<operation name="getRecords">
+<operation name="getAllRecords">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="storeResults">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="getTaxonomyResults">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
