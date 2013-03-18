@@ -35,6 +35,7 @@ public class MongoPersistence implements IRepository {
     public static MongoPersistence instance() {
         if (instance == null) {
             instance = new MongoPersistence();
+            System.out.println("new instance");
         }
 
         return instance;
@@ -68,8 +69,7 @@ public class MongoPersistence implements IRepository {
     }
 
     public void dispose() {
-        //TODO: what?
-//        mongoClient.close();
+        mongoClient.close();
     }
 
     @Override
@@ -108,6 +108,12 @@ public class MongoPersistence implements IRepository {
         return id;
     }
 
+    /**
+     * Fetches all records from a RecordSet.
+     *
+     * @param recordSetId
+     * @return The list of records
+     */
     @Override
     public List<Record> getAllRecords(String recordSetId) {
         return getRecords(recordSetId, 0, 0);

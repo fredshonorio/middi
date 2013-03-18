@@ -3,6 +3,10 @@ package data.mongodb;
 import data.Schema;
 import plugin.ComparePlugin;
 
+/**
+ * Defines a compare configuration.
+ * @author Frederico Honório <fredericohonorio@ua.pt>
+ */
 public class CompareConfiguration {
 
     public final Schema schema;
@@ -33,13 +37,14 @@ public class CompareConfiguration {
 	this.thresholdHigh = thresholdHigh;
     }
 
+    /**
+     * Change the weights of the configuration.
+     * @param weights the weights.
+     */
     public void reWeight(double[] weights) {
 	assert weights != null;
 	assert validWeights(weights);
-
-	for (int i = 0; i < this.weights.length; i++) {
-	    this.weights[i] = weights[i];
-	}
+        System.arraycopy(weights, 0, this.weights, 0, this.weights.length);
 
 	assert validWeights(this.weights);
     }

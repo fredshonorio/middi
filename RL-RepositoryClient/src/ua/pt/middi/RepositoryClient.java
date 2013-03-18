@@ -10,7 +10,7 @@ import data.Schema;
 import java.util.List;
 
 /**
- *
+ * Implements a repository web service client.
  * @author Frederico Honório <fredericohonorio@ua.pt>
  */
 public class RepositoryClient implements IRepository {

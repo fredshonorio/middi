@@ -72,15 +72,36 @@
 
     -->
     
-    <!-- ,wsimport-client-generate -->
     
-    <target name="wsimport-client-generate" depends="wsimport-client-Repository">
+    
+    <!--    <target name="wsimport-client-generate" depends="wsimport-client-Repository">
         <delete file="/build/generated-sources/jax-ws/data/Record.java"/>
     </target>
-      
-      
     <target name="-pre-pre-compile" depends="init,deps-jar">
-        
         <mkdir dir="${build.classes.dir}"/>
+    </target>-->
+      
+    <target name="wsimport-client-Repository" depends="wsimport-init">
+        <mkdir dir="${build.generated.dir}/jax-wsCache/Repository"/>
+        <property name="wsdl-Repository" location="xml-resources/web-service-references/Repository/wsdl/localhost_8080/RL-Repository/Repository.wsdl"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/Repository" destdir="${build.generated.dir}/jax-wsCache/Repository" wsdl="${wsdl-Repository}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" wsdlLocation="http://localhost:8080/RL-Repository/Repository?wsdl" xnocompile="true" xendorsed="true">
+            <depends file="${wsdl-Repository}"/>
+            <produces dir="${build.generated.dir}/jax-wsCache/Repository"/>
+        </wsimport>
+        
+        <copy todir="${build.generated.sources.dir}/jax-ws">
+            <fileset dir="${build.generated.dir}/jax-wsCache/Repository">
+                <include name="**/*.java"/>
+            </fileset>
+        </copy>
+        
+        <!-- MAGIC: Delete argument classes stubs. -->
+        <property file="nbproject/build-ws.properties"/> <!-- load properties-->
+        <delete verbose="true"> <!--delete files-->
+            <path>
+                <filelist id="derp" dir="${build.generated.excluded.path}" files="${build.generated.excluded.classes}" />
+            </path>
+        </delete>
     </target>
+   
 </project>
