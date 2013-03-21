@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.2.0-1 (tags/2.2.0u1-7139; 2012-06-02T10:55:19+0000) JAXWS-RI/2.2.6-2 JAXWS/2.2 svn-revision#unknown. --><xs:schema xmlns:tns="http://pluginslot.ua.pt/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://pluginslot.ua.pt/">
+
+<xs:element name="FileNotFoundException" type="tns:FileNotFoundException"/>
+
+<xs:element name="IOException" type="tns:IOException"/>
+
+<xs:element name="UploadPluginSet" type="tns:UploadPluginSet"/>
+
+<xs:element name="UploadPluginSetResponse" type="tns:UploadPluginSetResponse"/>
+
+<xs:element name="addTask" type="tns:addTask"/>
+
+<xs:element name="addTaskResponse" type="tns:addTaskResponse"/>
+
+<xs:element name="push" type="tns:push"/>
+
+<xs:element name="pushResponse" type="tns:pushResponse"/>
+
+<xs:element name="start" type="tns:start"/>
+
+<xs:element name="startResponse" type="tns:startResponse"/>
+
+<xs:element name="stop" type="tns:stop"/>
+
+<xs:element name="stopResponse" type="tns:stopResponse"/>
+
+<xs:complexType name="start">
+<xs:sequence>
+<xs:element name="pluginName" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="startResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="stop">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="stopResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="push">
+<xs:sequence>
+<xs:element name="workDir" type="xs:string" minOccurs="0"/>
+<xs:element name="data" type="tns:cacheData" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="cacheData">
+<xs:sequence>
+<xs:element name="data" type="xs:base64Binary" minOccurs="0"/>
+<xs:element name="fileName" type="xs:string" minOccurs="0"/>
+<xs:element name="isZipped" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="pushResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:anyURI" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="UploadPluginSet">
+<xs:sequence>
+<xs:element name="pluginSet" type="tns:pluginSet" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="pluginSet">
+<xs:sequence>
+<xs:element name="plugin" type="tns:plugin" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="plugin">
+<xs:sequence>
+<xs:element name="id" type="xs:string" minOccurs="0"/>
+<xs:element name="settings">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="key" minOccurs="0" type="xs:string"/>
+<xs:element name="value" minOccurs="0" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="value" type="xs:base64Binary" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="UploadPluginSetResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="FileNotFoundException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="IOException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="addTask">
+<xs:sequence>
+<xs:element name="task" type="tns:pluginSlotTask" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="pluginSlotTask">
+<xs:sequence>
+<xs:element name="command" type="xs:int"/>
+<xs:element name="domain" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="addTaskResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

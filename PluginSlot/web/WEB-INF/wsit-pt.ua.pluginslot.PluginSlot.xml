@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+ <definitions 
+ xmlns="http://schemas.xmlsoap.org/wsdl/" 
+ xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+ xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="PluginSlot" targetNamespace="http://pluginslot.ua.pt/" xmlns:tns="http://pluginslot.ua.pt/" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:fi="http://java.sun.com/xml/ns/wsit/2006/09/policy/fastinfoset/service" xmlns:tcp="http://java.sun.com/xml/ns/wsit/2006/09/policy/soaptcp/service" xmlns:wsat="http://schemas.xmlsoap.org/ws/2004/10/wsat" xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" 
+ >
+    <message name="FileNotFoundException"/>
+    <message name="IOException"/>
+    <message name="addTask"/>
+    <message name="addTaskResponse"/>
+    <message name="start"/>
+    <message name="startResponse"/>
+    <message name="push"/>
+    <message name="pushResponse"/>
+    <message name="stop"/>
+    <message name="stopResponse"/>
+    <portType name="PluginSlot">
+        <operation name="addTask">
+            <input message="tns:addTask"/>
+            <output message="tns:addTaskResponse"/>
+        </operation>
+        <operation name="start">
+            <input message="tns:start"/>
+            <output message="tns:startResponse"/>
+        </operation>
+        <operation name="push">
+            <input message="tns:push"/>
+            <output message="tns:pushResponse"/>
+        </operation>
+        <operation name="stop">
+            <input message="tns:stop"/>
+            <output message="tns:stopResponse"/>
+        </operation>
+    </portType>
+    <binding name="PluginSlotPortBinding" type="tns:PluginSlot">
+        <wsp:PolicyReference URI="#PluginSlotPortBindingPolicy"/>
+        <operation name="addTask">
+            <input/>
+            <output/>
+        </operation>
+        <operation name="start">
+            <input/>
+            <output/>
+        </operation>
+        <operation name="push">
+            <input/>
+            <output/>
+        </operation>
+        <operation name="stop">
+            <input/>
+            <output/>
+        </operation>
+    </binding>
+    <service name="PluginSlot">
+        <port name="PluginSlotPort" binding="tns:PluginSlotPortBinding"/>
+    </service>
+    <wsp:Policy wsu:Id="PluginSlotPortBindingPolicy">
+        <wsp:ExactlyOne>
+            <wsp:All/>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="PluginSlotPortBinding_UploadPluginSet_Policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <wsat:ATAssertion wsp:Optional="true"/>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="PluginSlotPortBinding_UploadPluginSet_Input_Policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <sp:EncryptedParts>
+                    <sp:Body/>
+                </sp:EncryptedParts>
+                <sp:SignedParts>
+                    <sp:Body/>
+                </sp:SignedParts>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="PluginSlotPortBinding_UploadPluginSet_Output_Policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <sp:EncryptedParts>
+                    <sp:Body/>
+                </sp:EncryptedParts>
+                <sp:SignedParts>
+                    <sp:Body/>
+                </sp:SignedParts>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="PluginSlotPortBinding_addTask_Input_Policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <sp:EncryptedParts>
+                    <sp:Body/>
+                </sp:EncryptedParts>
+                <sp:SignedParts>
+                    <sp:Body/>
+                </sp:SignedParts>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="PluginSlotPortBinding_addTask_Output_Policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <sp:EncryptedParts>
+                    <sp:Body/>
+                </sp:EncryptedParts>
+                <sp:SignedParts>
+                    <sp:Body/>
+                </sp:SignedParts>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="PluginSlotPortBinding_start_Input_Policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <sp:EncryptedParts>
+                    <sp:Body/>
+                </sp:EncryptedParts>
+                <sp:SignedParts>
+                    <sp:Body/>
+                </sp:SignedParts>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="PluginSlotPortBinding_start_Output_Policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <sp:EncryptedParts>
+                    <sp:Body/>
+                </sp:EncryptedParts>
+                <sp:SignedParts>
+                    <sp:Body/>
+                </sp:SignedParts>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+</definitions>
