@@ -31,7 +31,7 @@
     </target>
     <target name="wsimport-client-clean-Repository" depends="-init-project">
         <delete dir="${build.generated.dir}/jax-wsCache/Repository"/>
-        <delete dir="${build.generated.sources.dir}/jax-ws/data"/>
+        <delete dir="${build.generated.sources.dir}/jax-ws/pt/ua/rlaas/data"/>
     </target>
     <target name="wsimport-client-generate" depends="wsimport-client-Repository"/>
 </project>

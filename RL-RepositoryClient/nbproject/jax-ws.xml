@@ -5,7 +5,7 @@
     <client name="Repository">
       <wsdl-url>http://localhost:8080/RL-Repository/Repository?wsdl</wsdl-url>
       <local-wsdl-file>localhost_8080/RL-Repository/Repository.wsdl</local-wsdl-file>
-      <package-name>data</package-name>
+      <package-name>pt.ua.rlaas.data</package-name>
       <catalog-file>catalog.xml</catalog-file>
       <wsimport-options>
         <wsimport-option>

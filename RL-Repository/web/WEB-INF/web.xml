@@ -10,8 +10,8 @@
         </session-timeout>
     </session-config>
     <listener>
-        <listener-class>
-            util.DisposeMongo
+        <listener-class> <!-- bind listener class-->
+            pt.ua.rlaas.util.DisposeMongo
         </listener-class>
     </listener>
 </web-app>
