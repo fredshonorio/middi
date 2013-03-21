@@ -81,6 +81,21 @@
         <mkdir dir="${build.classes.dir}"/>
     </target>-->
       
+    <!-- HOW TO REMOVE STUBS
+    1. Copy the target "wsimport-client-XXX" to the build file. This will override it.
+    2. Create a properties file with the path and list of files like so:
+    
+    my.build.path=path\to\generated\files
+    my.build.files=DeleteMe.java,MeToo.java
+    
+    3. After the <copy> task add:
+        <property file="nbproject/build-ws.properties"/>
+        <delete verbose="true">
+            <path>
+                <filelist dir="${my.build.path}" files="${my.build.files}" />
+            </path>
+        </delete>
+    -->
     <target name="wsimport-client-Repository" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/Repository"/>
         <property name="wsdl-Repository" location="xml-resources/web-service-references/Repository/wsdl/localhost_8080/RL-Repository/Repository.wsdl"/>
@@ -94,7 +109,6 @@
                 <include name="**/*.java"/>
             </fileset>
         </copy>
-        
         <!-- MAGIC: Delete argument classes stubs. -->
         <property file="nbproject/build-ws.properties"/> <!-- load properties-->
         <delete verbose="true"> <!--delete files-->

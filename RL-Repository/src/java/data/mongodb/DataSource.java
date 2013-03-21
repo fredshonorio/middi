@@ -3,7 +3,6 @@
  */
 package data.mongodb;
 
-import data.Schema;
 import java.util.ArrayList;
 
 import plugin.ImportPlugin;

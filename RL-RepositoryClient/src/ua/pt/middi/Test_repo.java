@@ -5,6 +5,7 @@
 package ua.pt.middi;
 
 import data.Match;
+import data.PersistenceException_Exception;
 import data.Record;
 import data.RecordSet;
 import data.Repository;
@@ -13,6 +14,8 @@ import data.Result;
 import data.Schema;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import util.RecordHelper;
 import util.ResultHelper;
 
@@ -105,6 +108,11 @@ public class Test_repo {
         tmpR = r.getTaxonomyResults(rId, "zé");
         for (Result res : tmpR) {
             System.out.println(rhelper.toString(res));
+        }
+        try {
+            r.operation();
+        } catch (Exception ex) {
+            Logger.getLogger(Test_repo.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

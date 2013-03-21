@@ -1,7 +1,7 @@
 package test.persistence;
 
-import data.Record;
-import data.Schema;
+import data.persistence.mongodb.Record;
+import data.persistence.mongodb.Schema;
 import java.util.Random;
 
 /**

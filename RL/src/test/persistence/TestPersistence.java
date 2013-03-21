@@ -1,11 +1,11 @@
 package test.persistence;
 
-import data.Match;
-import data.Persistence;
-import data.RecordSet;
-import data.Record;
-import data.Result;
-import data.Schema;
+import data.persistence.mongodb.Match;
+import data.persistence.mongodb.Persistence;
+import data.persistence.mongodb.RecordSet;
+import data.persistence.mongodb.Record;
+import data.persistence.mongodb.Result;
+import data.persistence.mongodb.Schema;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +20,8 @@ public class TestPersistence {
         Schema schema = new Schema(new String[]{"name", "bi"});
         Persistence p = Persistence.instance(schema);
 
+        assert p.checkDb();
+        
         p.clear();
         System.out.print("Generating random recordset...");
 
@@ -28,7 +30,6 @@ public class TestPersistence {
             rSet.add(RandomRecord.getNew(schema).setTaxonomy(i < 1000 ? "asd" : "qwe"));
         }
         System.out.println("done.");
-
 
         System.out.print("Storing random recordset...");
         String id = p.storeRecordSet(rSet);

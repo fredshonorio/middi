@@ -1,8 +1,5 @@
 package data;
 
-import data.Record;
-import data.RecordSet;
-import data.Schema;
 import data.mongodb.MongoPersistence;
 import java.util.List;
 import javax.jws.WebService;
@@ -12,7 +9,7 @@ import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
 
 /**
- *
+ * Exposes persistance  functionality through a web-service.
  * @author Frederico Honório <fredericohonorio@ua.pt>
  */
 @WebService(serviceName = "Repository")
@@ -90,5 +87,13 @@ public class Repository {
             //problems!
         }
         return p.getAllResults(resultSetId);
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "operation")
+    public String operation() throws PersistenceException {
+        throw new PersistenceException();
     }
 }

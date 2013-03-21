@@ -4,17 +4,11 @@
 <xsd:import namespace="http://data/" schemaLocation="http://localhost:8080/RL-Repository/Repository?xsd=1"/>
 </xsd:schema>
 </types>
-<message name="getAllResults">
-<part name="parameters" element="tns:getAllResults"/>
+<message name="storeResults">
+<part name="parameters" element="tns:storeResults"/>
 </message>
-<message name="getAllResultsResponse">
-<part name="parameters" element="tns:getAllResultsResponse"/>
-</message>
-<message name="storeRecordSet">
-<part name="parameters" element="tns:storeRecordSet"/>
-</message>
-<message name="storeRecordSetResponse">
-<part name="parameters" element="tns:storeRecordSetResponse"/>
+<message name="storeResultsResponse">
+<part name="parameters" element="tns:storeResultsResponse"/>
 </message>
 <message name="getRecords">
 <part name="parameters" element="tns:getRecords"/>
@@ -28,11 +22,17 @@
 <message name="getAllRecordsResponse">
 <part name="parameters" element="tns:getAllRecordsResponse"/>
 </message>
-<message name="storeResults">
-<part name="parameters" element="tns:storeResults"/>
+<message name="storeRecordSet">
+<part name="parameters" element="tns:storeRecordSet"/>
 </message>
-<message name="storeResultsResponse">
-<part name="parameters" element="tns:storeResultsResponse"/>
+<message name="storeRecordSetResponse">
+<part name="parameters" element="tns:storeRecordSetResponse"/>
+</message>
+<message name="getAllResults">
+<part name="parameters" element="tns:getAllResults"/>
+</message>
+<message name="getAllResultsResponse">
+<part name="parameters" element="tns:getAllResultsResponse"/>
 </message>
 <message name="getTaxonomyResults">
 <part name="parameters" element="tns:getTaxonomyResults"/>
@@ -40,14 +40,19 @@
 <message name="getTaxonomyResultsResponse">
 <part name="parameters" element="tns:getTaxonomyResultsResponse"/>
 </message>
+<message name="operation">
+<part name="parameters" element="tns:operation"/>
+</message>
+<message name="operationResponse">
+<part name="parameters" element="tns:operationResponse"/>
+</message>
+<message name="PersistenceException">
+<part name="fault" element="tns:PersistenceException"/>
+</message>
 <portType name="Repository">
-<operation name="getAllResults">
-<input wsam:Action="http://data/Repository/getAllResultsRequest" message="tns:getAllResults"/>
-<output wsam:Action="http://data/Repository/getAllResultsResponse" message="tns:getAllResultsResponse"/>
-</operation>
-<operation name="storeRecordSet">
-<input wsam:Action="http://data/Repository/storeRecordSetRequest" message="tns:storeRecordSet"/>
-<output wsam:Action="http://data/Repository/storeRecordSetResponse" message="tns:storeRecordSetResponse"/>
+<operation name="storeResults">
+<input wsam:Action="http://data/Repository/storeResultsRequest" message="tns:storeResults"/>
+<output wsam:Action="http://data/Repository/storeResultsResponse" message="tns:storeResultsResponse"/>
 </operation>
 <operation name="getRecords">
 <input wsam:Action="http://data/Repository/getRecordsRequest" message="tns:getRecords"/>
@@ -57,27 +62,27 @@
 <input wsam:Action="http://data/Repository/getAllRecordsRequest" message="tns:getAllRecords"/>
 <output wsam:Action="http://data/Repository/getAllRecordsResponse" message="tns:getAllRecordsResponse"/>
 </operation>
-<operation name="storeResults">
-<input wsam:Action="http://data/Repository/storeResultsRequest" message="tns:storeResults"/>
-<output wsam:Action="http://data/Repository/storeResultsResponse" message="tns:storeResultsResponse"/>
+<operation name="storeRecordSet">
+<input wsam:Action="http://data/Repository/storeRecordSetRequest" message="tns:storeRecordSet"/>
+<output wsam:Action="http://data/Repository/storeRecordSetResponse" message="tns:storeRecordSetResponse"/>
+</operation>
+<operation name="getAllResults">
+<input wsam:Action="http://data/Repository/getAllResultsRequest" message="tns:getAllResults"/>
+<output wsam:Action="http://data/Repository/getAllResultsResponse" message="tns:getAllResultsResponse"/>
 </operation>
 <operation name="getTaxonomyResults">
 <input wsam:Action="http://data/Repository/getTaxonomyResultsRequest" message="tns:getTaxonomyResults"/>
 <output wsam:Action="http://data/Repository/getTaxonomyResultsResponse" message="tns:getTaxonomyResultsResponse"/>
 </operation>
+<operation name="operation">
+<input wsam:Action="http://data/Repository/operationRequest" message="tns:operation"/>
+<output wsam:Action="http://data/Repository/operationResponse" message="tns:operationResponse"/>
+<fault message="tns:PersistenceException" name="PersistenceException" wsam:Action="http://data/Repository/operation/Fault/PersistenceException"/>
+</operation>
 </portType>
 <binding name="RepositoryPortBinding" type="tns:Repository">
 <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
-<operation name="getAllResults">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="storeRecordSet">
+<operation name="storeResults">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
@@ -104,7 +109,16 @@
 <soap:body use="literal"/>
 </output>
 </operation>
-<operation name="storeResults">
+<operation name="storeRecordSet">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="getAllResults">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
@@ -121,6 +135,18 @@
 <output>
 <soap:body use="literal"/>
 </output>
+</operation>
+<operation name="operation">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+<fault name="PersistenceException">
+<soap:fault name="PersistenceException" use="literal"/>
+</fault>
 </operation>
 </binding>
 <service name="Repository">
