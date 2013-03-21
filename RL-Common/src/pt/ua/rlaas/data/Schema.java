@@ -29,6 +29,10 @@ public class Schema implements Iterable<String> {
     public void setFieldNames(List<String> fieldNames) {
         this.fieldNames = fieldNames;
     }
+    
+    public int size(){
+        return fieldNames.size();
+    }
 
     @Override
     public Iterator<String> iterator() {

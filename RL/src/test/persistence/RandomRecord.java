@@ -1,8 +1,9 @@
 package test.persistence;
 
-import data.persistence.mongodb.Record;
-import data.persistence.mongodb.Schema;
+import pt.ua.rlaas.data.Record;
+import pt.ua.rlaas.data.Schema;
 import java.util.Random;
+import pt.ua.rlaas.util.RecordHelper;
 
 /**
  *
@@ -17,9 +18,10 @@ public class RandomRecord {
 //    private static final int cap_dist = Math.abs('A' - 'a');
 
     public static Record getNew(Schema schema) {
-        Record r = schema.newRecord();
-        for (int i = 0; i < schema.length(); i++) {
-            r.set(i, rndString(SIZE));
+        RecordHelper h = new RecordHelper(schema);
+        Record r = h.newRecord("id");
+        for (int i = 0; i < schema.size(); i++) {
+            h.set(r, i, null);
         }
         return r;
     }

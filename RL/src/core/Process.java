@@ -7,17 +7,17 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import plugin.ExportPlugin;
-import plugin.ImportPlugin;
-import plugin.TransformPlugin;
-import data.persistence.mongodb.CompareConfiguration;
-import data.persistence.mongodb.DataSource;
-import data.persistence.mongodb.Match;
-import data.persistence.mongodb.Persistence;
-import data.persistence.mongodb.Record;
-import data.persistence.mongodb.RecordSet;
-import data.persistence.mongodb.Result;
-import data.persistence.mongodb.Schema;
+import pt.ua.rlaas.plugin.ExportPlugin;
+import pt.ua.rlaas.plugin.ImportPlugin;
+import pt.ua.rlaas.plugin.TransformPlugin;
+import pt.ua.rlaas.data.CompareConfiguration;
+import pt.ua.rlaas.data.DataSource;
+import pt.ua.rlaas.data.Match;
+import pt.ua.rlaas.data.Persistence;
+import pt.ua.rlaas.data.Record;
+import pt.ua.rlaas.data.RecordSet;
+import pt.ua.rlaas.data.Result;
+import pt.ua.rlaas.data.Schema;
 
 public class Process {
 
