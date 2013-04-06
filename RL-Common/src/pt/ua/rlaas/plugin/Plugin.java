@@ -13,8 +13,8 @@ import java.util.HashMap;
  */
 public interface Plugin 
 {
-    void init(HashMap<String,String> settings);
-    
-    void destroy();
+//    void init(HashMap<String,String> settings, ExecutionContext context);
+//    
+//    void destroy();
     
 }

@@ -163,6 +163,28 @@ public class MongoPersistence implements IRepository {
         return records;
     }
 
+    public Schema getSchema(String recordSetId) {
+        assert recordSetId != null;
+        assert !recordSetId.isEmpty();
+
+        DBCollection sets = db.getCollection(RECORDSET_META_COLLECTION);
+        DBObject query = new BasicDBObject("_id", recordSetId);
+
+        assert sets.find(query).count() == 0 : "The recordset is not in database";
+        assert db.getCollectionNames().contains(RECORDSET_COLLECTION_PREFIX + recordSetId) : "The recordset is not in database";
+
+        DBCollection collection = db.getCollection(RECORDSET_COLLECTION_PREFIX + recordSetId);
+
+        DBCursor cursor = collection.find().limit(1);
+
+        Schema tSchema = null;
+        BasicDBObject tmp;
+        tmp = (BasicDBObject) cursor.next();
+        tSchema = DBRecord.getImplicitSchema(tmp);
+        
+        return tSchema;
+    }
+
     @Override
     public String storeResults(List<Result> results, Schema schema) {
         assert results != null;

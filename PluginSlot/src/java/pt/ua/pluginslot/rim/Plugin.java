@@ -10,36 +10,33 @@ import java.util.HashMap;
  *
  * @author Luís S. Ribeiro
  */
-public class Plugin 
-{
+public class Plugin {
+
     protected byte[] value;
-        
-        protected String id;
+    protected String id;
+    protected HashMap<String, String> settings;
 
-          
-        protected HashMap<String,String> settings;
-        
-        public String getId() {
-            return id;
-        }
+    public String getId() {
+        return id;
+    }
 
-        public byte[] getValue() {
-            return value;
-        }
+    public byte[] getValue() {
+        return value;
+    }
 
-        public void setId(String id) {
-            this.id = id;
-        }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-        public void setValue(byte[] value) {
-            this.value = value;
-        }
+    public void setValue(byte[] value) {
+        this.value = value;
+    }
 
-        public void setSettings(HashMap<String, String> settings) {
-            this.settings = settings;
-        }
+    public void setSettings(HashMap<String, String> settings) {
+        this.settings = settings;
+    }
 
-        public HashMap<String, String> getSettings() {
-            return settings;
-        }
+    public HashMap<String, String> getSettings() {
+        return settings;
+    }
 }

@@ -11,6 +11,7 @@ import pt.ua.rlaas.data.Schema;
 
 /**
  * Implements a repository web service client.
+ *
  * @author Frederico Honório <fredericohonorio@ua.pt>
  */
 public class RepositoryClient implements IRepository {
@@ -21,6 +22,11 @@ public class RepositoryClient implements IRepository {
     public RepositoryClient() {
         svc = new Repository_Service();
         repository = svc.getRepositoryPort();
+    }
+
+    public RepositoryClient(String addr) {
+        //TODO: complete
+        this();
     }
 
     @Override
@@ -56,5 +62,10 @@ public class RepositoryClient implements IRepository {
     @Override
     public String test(Record record, Schema schema) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Schema getSchema(String recordSetId) {
+        return repository.getSchema(recordSetId);
     }
 }

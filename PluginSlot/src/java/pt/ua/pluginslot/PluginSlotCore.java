@@ -71,8 +71,10 @@ public class PluginSlotCore implements Observer
     
     public synchronized void savePlugin(Plugin plugin) throws FileNotFoundException, IOException
     {
-        File jar = new File(pluginDir.getPath()+File.separator+plugin.getId());
+        
+        File jar = new File(pluginDir.getPath()+File.separator+plugin.getId()+".jar");
             
+        System.out.println("saving " + jar.getAbsolutePath());
         FileOutputStream fos = new FileOutputStream(jar) ;
         fos.write(plugin.getValue());
         fos.close();
@@ -80,7 +82,7 @@ public class PluginSlotCore implements Observer
 
     public synchronized URL push(String domain, CacheData data) throws FileNotFoundException, FileAlreadyExistsException, IOException, IllegalAccessException
     {        
-        File dir = cache.newWorkDir(domain);        
+        File dir = cache.newWorkDir(domain); 
         return cache.storeData(dir,data);
     }
     

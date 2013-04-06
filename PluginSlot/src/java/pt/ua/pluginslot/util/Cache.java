@@ -63,10 +63,12 @@ public class Cache
     
     private URL store(File dir, CacheData data) throws FileNotFoundException, FileAlreadyExistsException, IOException
     {
+        System.out.println(dir.getAbsolutePath());
         File f = null;
         try 
         {
             String fileName = data.getFileName();
+            
             if(fileName == null || fileName.trim().equals(""))
             {
                 fileName = hashContent(data.getData());

@@ -10,20 +10,17 @@
 <message name="storeRecordSetResponse">
 <part name="parameters" element="tns:storeRecordSetResponse"/>
 </message>
+<message name="getAllRecords">
+<part name="parameters" element="tns:getAllRecords"/>
+</message>
+<message name="getAllRecordsResponse">
+<part name="parameters" element="tns:getAllRecordsResponse"/>
+</message>
 <message name="getAllResults">
 <part name="parameters" element="tns:getAllResults"/>
 </message>
 <message name="getAllResultsResponse">
 <part name="parameters" element="tns:getAllResultsResponse"/>
-</message>
-<message name="operation">
-<part name="parameters" element="tns:operation"/>
-</message>
-<message name="operationResponse">
-<part name="parameters" element="tns:operationResponse"/>
-</message>
-<message name="PersistenceException">
-<part name="fault" element="tns:PersistenceException"/>
 </message>
 <message name="storeResults">
 <part name="parameters" element="tns:storeResults"/>
@@ -37,11 +34,11 @@
 <message name="getRecordsResponse">
 <part name="parameters" element="tns:getRecordsResponse"/>
 </message>
-<message name="getAllRecords">
-<part name="parameters" element="tns:getAllRecords"/>
+<message name="getSchema">
+<part name="parameters" element="tns:getSchema"/>
 </message>
-<message name="getAllRecordsResponse">
-<part name="parameters" element="tns:getAllRecordsResponse"/>
+<message name="getSchemaResponse">
+<part name="parameters" element="tns:getSchemaResponse"/>
 </message>
 <message name="getTaxonomyResults">
 <part name="parameters" element="tns:getTaxonomyResults"/>
@@ -49,19 +46,27 @@
 <message name="getTaxonomyResultsResponse">
 <part name="parameters" element="tns:getTaxonomyResultsResponse"/>
 </message>
+<message name="operation">
+<part name="parameters" element="tns:operation"/>
+</message>
+<message name="operationResponse">
+<part name="parameters" element="tns:operationResponse"/>
+</message>
+<message name="PersistenceException">
+<part name="fault" element="tns:PersistenceException"/>
+</message>
 <portType name="Repository">
 <operation name="storeRecordSet">
 <input wsam:Action="http://data.rlaas.ua.pt/Repository/storeRecordSetRequest" message="tns:storeRecordSet"/>
 <output wsam:Action="http://data.rlaas.ua.pt/Repository/storeRecordSetResponse" message="tns:storeRecordSetResponse"/>
 </operation>
+<operation name="getAllRecords">
+<input wsam:Action="http://data.rlaas.ua.pt/Repository/getAllRecordsRequest" message="tns:getAllRecords"/>
+<output wsam:Action="http://data.rlaas.ua.pt/Repository/getAllRecordsResponse" message="tns:getAllRecordsResponse"/>
+</operation>
 <operation name="getAllResults">
 <input wsam:Action="http://data.rlaas.ua.pt/Repository/getAllResultsRequest" message="tns:getAllResults"/>
 <output wsam:Action="http://data.rlaas.ua.pt/Repository/getAllResultsResponse" message="tns:getAllResultsResponse"/>
-</operation>
-<operation name="operation">
-<input wsam:Action="http://data.rlaas.ua.pt/Repository/operationRequest" message="tns:operation"/>
-<output wsam:Action="http://data.rlaas.ua.pt/Repository/operationResponse" message="tns:operationResponse"/>
-<fault message="tns:PersistenceException" name="PersistenceException" wsam:Action="http://data.rlaas.ua.pt/Repository/operation/Fault/PersistenceException"/>
 </operation>
 <operation name="storeResults">
 <input wsam:Action="http://data.rlaas.ua.pt/Repository/storeResultsRequest" message="tns:storeResults"/>
@@ -71,13 +76,18 @@
 <input wsam:Action="http://data.rlaas.ua.pt/Repository/getRecordsRequest" message="tns:getRecords"/>
 <output wsam:Action="http://data.rlaas.ua.pt/Repository/getRecordsResponse" message="tns:getRecordsResponse"/>
 </operation>
-<operation name="getAllRecords">
-<input wsam:Action="http://data.rlaas.ua.pt/Repository/getAllRecordsRequest" message="tns:getAllRecords"/>
-<output wsam:Action="http://data.rlaas.ua.pt/Repository/getAllRecordsResponse" message="tns:getAllRecordsResponse"/>
+<operation name="getSchema">
+<input wsam:Action="http://data.rlaas.ua.pt/Repository/getSchemaRequest" message="tns:getSchema"/>
+<output wsam:Action="http://data.rlaas.ua.pt/Repository/getSchemaResponse" message="tns:getSchemaResponse"/>
 </operation>
 <operation name="getTaxonomyResults">
 <input wsam:Action="http://data.rlaas.ua.pt/Repository/getTaxonomyResultsRequest" message="tns:getTaxonomyResults"/>
 <output wsam:Action="http://data.rlaas.ua.pt/Repository/getTaxonomyResultsResponse" message="tns:getTaxonomyResultsResponse"/>
+</operation>
+<operation name="operation">
+<input wsam:Action="http://data.rlaas.ua.pt/Repository/operationRequest" message="tns:operation"/>
+<output wsam:Action="http://data.rlaas.ua.pt/Repository/operationResponse" message="tns:operationResponse"/>
+<fault message="tns:PersistenceException" name="PersistenceException" wsam:Action="http://data.rlaas.ua.pt/Repository/operation/Fault/PersistenceException"/>
 </operation>
 </portType>
 <binding name="RepositoryPortBinding" type="tns:Repository">
@@ -91,7 +101,52 @@
 <soap:body use="literal"/>
 </output>
 </operation>
+<operation name="getAllRecords">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
 <operation name="getAllResults">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="storeResults">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="getRecords">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="getSchema">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="getTaxonomyResults">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
@@ -111,42 +166,6 @@
 <fault name="PersistenceException">
 <soap:fault name="PersistenceException" use="literal"/>
 </fault>
-</operation>
-<operation name="storeResults">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="getRecords">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="getAllRecords">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="getTaxonomyResults">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
 </operation>
 </binding>
 <service name="Repository">

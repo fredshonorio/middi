@@ -4,16 +4,21 @@
  */
 package pt.ua.pluginslot.rim;
 
+import java.util.HashMap;
 
 /**
  *
  * @author Luís S. Ribeiro
+ * @author Frederico Honório <fredericohonorio@ua.pt>
  */
-public class PluginSlotTask 
-{    
-    private String domain;       
-    //private String pluginName;
+public class PluginSlotTask {
+
+    private String domain;
     private int command;
+    private HashMap<String, String> settings;
+
+    public PluginSlotTask() {
+    }
 
     public int getCommand() {
         return command;
@@ -23,9 +28,6 @@ public class PluginSlotTask
         this.command = command;
     }
 
-    public PluginSlotTask() {
-    }
-
     public String getDomain() {
         return domain;
     }
@@ -33,23 +35,12 @@ public class PluginSlotTask
     public void setDomain(String domain) {
         this.domain = domain;
     }
-    
 
-//    /**
-//     * @return the pluginName
-//     */
-//    public String getPluginName() {
-//        return pluginName;
-//    }
-//
-//    /**
-//     * @param pluginName the pluginName to set
-//     */
-//    public void setPluginName(String pluginName) {
-//        this.pluginName = pluginName;
-//    }
+    public HashMap<String, String> getSettings() {
+        return settings;
+    }
 
-    
-    
-    
+    public void setSettings(HashMap<String, String> settings) {
+        this.settings = settings;
+    }
 }

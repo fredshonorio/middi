@@ -5,11 +5,10 @@ import java.util.List;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
-import javax.xml.ws.RequestWrapper;
-import javax.xml.ws.ResponseWrapper;
 
 /**
- * Exposes persistance  functionality through a web-service.
+ * Exposes persistance functionality through a web-service.
+ *
  * @author Frederico Honório <fredericohonorio@ua.pt>
  */
 @WebService(serviceName = "Repository")
@@ -31,7 +30,7 @@ public class Repository {
      * Web service operation
      */
     @WebMethod(operationName = "getAllRecords")
-    public List<Record> getRecords(@WebParam(name = "recordSetId") String recordSetId) {
+    public List<Record> getAllRecords(@WebParam(name = "recordSetId") String recordSetId) {
         MongoPersistence p = MongoPersistence.instance();
         if (!p.checkDb()) {
             //problems!
@@ -55,8 +54,8 @@ public class Repository {
      * Web service operation
      */
     @WebMethod(operationName = "getRecords")
-    @RequestWrapper(className = "data.getRecords_1")
-    @ResponseWrapper(className = "data.getRecords_1Response")
+//    @RequestWrapper(className = "data.getRecords_1")
+//    @ResponseWrapper(className = "data.getRecords_1Response")
     public List<Record> getRecords(@WebParam(name = "recordSetId") String recordSetId, @WebParam(name = "offset") int offset, @WebParam(name = "size") int size) {
         MongoPersistence p = MongoPersistence.instance();
         if (!p.checkDb()) {
@@ -95,5 +94,17 @@ public class Repository {
     @WebMethod(operationName = "operation")
     public String operation() throws PersistenceException {
         throw new PersistenceException();
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "getSchema")
+    public Schema getSchema(@WebParam(name = "recordSetId") String recordSetId) {
+        MongoPersistence p = MongoPersistence.instance();
+        if (!p.checkDb()) {
+            //problems!
+        }
+        return p.getSchema(recordSetId);
     }
 }

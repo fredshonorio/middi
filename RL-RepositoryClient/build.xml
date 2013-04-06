@@ -82,7 +82,10 @@
     </target>-->
       
     <!-- HOW TO REMOVE STUBS
-    1. Copy the target "wsimport-client-XXX" to the build file. This will override it.
+    1. Copy the target "wsimport-client-XXX" from build-impl.xml to the build.xml file.
+    This will override the task definition. If meanwhile you break something you
+    can always delete what you did in the build.xml file and everything will be
+    has it was.
     2. Create a properties file with the path and list of files like so:
     
     my.build.path=path\to\generated\files
@@ -95,6 +98,12 @@
                 <filelist dir="${my.build.path}" files="${my.build.files}" />
             </path>
         </delete>
+        
+    4. Build your project. Check the output of the build process. 
+    After the "Parsing WSDL" you should see your delete statements.
+    Everything should work provided your classes have the appropriate methods.
+    
+    
     -->
     <target name="wsimport-client-Repository" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/Repository"/>

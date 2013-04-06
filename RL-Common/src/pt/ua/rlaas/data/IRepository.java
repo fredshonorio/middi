@@ -37,14 +37,16 @@ public interface IRepository {
 
     /**
      * Adds a set of results to the database.
-     * @param results 
+     *
+     * @param results
      * @param schema
-     * @return 
+     * @return
      */
     String storeResults(List<Result> results, Schema schema);
 
     /**
      * Fetches all results from a result set.
+     *
      * @param resultSetId The id of the result set.
      * @return The list of results.
      */
@@ -52,6 +54,7 @@ public interface IRepository {
 
     /**
      * Fetches the results that match a given taxonomy.
+     *
      * @param resultSetId The id of the result set.
      * @param taxonomy The taxonomy value.
      * @return The list of results.
@@ -59,4 +62,6 @@ public interface IRepository {
     List<Result> getTaxonomyResults(String resultSetId, String taxonomy);
 
     String test(Record record, Schema schema);
+
+    Schema getSchema(String recordSetId);
 }

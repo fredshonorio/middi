@@ -20,9 +20,10 @@ public class QueueTask
     //private String pluginName;    
     private int command;
 
-    public QueueTask(String domain, int command){ //,  String pluginName) {
+    public QueueTask(String domain, int command, HashMap<String, String> settings){ //,  String pluginName) {
         this.domain = domain;
         this.command = command;
+        this.settings = settings;
         
         //this.pluginName = pluginName;
     }
@@ -46,11 +47,6 @@ public class QueueTask
     public void setId(int id) {
         this.id = id;
     }
-    
-
-//    public String getPluginName() {
-//        return pluginName;
-//    }
 
     public HashMap<String, String> getSettings() {
         return settings;

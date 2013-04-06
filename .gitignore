@@ -1,2 +1,17 @@
 test_*/*
 old_*/*
+/RL-PluginSlotClient/nbproject/private/
+/RL-PluginSlotClient/build/
+/RL-Master/nbproject/private/
+/RL-PluginSlotClient/dist/
+/RL-Master/build/
+/RL-Master/dist/
+/RL-MasterPlugins/nbproject/private/
+/RL-TestPlugins/nbproject/private/
+/RL-TestPlugins/build/
+/RL-TestPlugins/dist/
+/RL-MasterPlugins/dist/
+/RL-MasterPlugins/build/
+/RL-Common-dev/nbproject/private/
+/RL-Common-dev/build/
+/RL-Common-dev/dist/

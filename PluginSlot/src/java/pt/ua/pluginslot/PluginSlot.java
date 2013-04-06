@@ -28,30 +28,29 @@ import pt.ua.pluginslot.util.Queue;
  * @author Luís S. Ribeiro
  */
 @WebService(serviceName = "PluginSlot")
-public class PluginSlot {
-    
+public class PluginSlot implements IPluginSlot {
+
     private PluginSlotCore core;
     private File cache = new File("Plugins");
-    private boolean isStarted = false;        
+    private boolean isStarted = false;
 
-    public PluginSlot() throws FileNotFoundException 
-    {
+    public PluginSlot() throws FileNotFoundException {
         core = new PluginSlotCore(cache);
-    }    
-    
+    }
+
     /**
      * Web service operation
      */
     @WebMethod(operationName = "UploadPluginSet")
-    public String UploadPluginSet(@WebParam(name = "pluginSet") PluginSet pluginSet) throws FileNotFoundException, IOException 
-    {
+    @Override
+    public String UploadPluginSet(@WebParam(name = "pluginSet") PluginSet pluginSet) throws FileNotFoundException, IOException {
         System.out.println("New Plugin to save");
         List<Plugin> plugins = pluginSet.getPlugin();
-        for(Plugin plugin: plugins)
-        {
-            core.savePlugin(plugin );                        
-        }                
-        
+        for (Plugin plugin : plugins) {
+            System.out.println(plugin.getId());
+            core.savePlugin(plugin);
+        }
+
         return "OK";
     }
 
@@ -59,32 +58,31 @@ public class PluginSlot {
      * Web service operation
      */
     @WebMethod(operationName = "addTask")
-    public String addTask(@WebParam(name = "task") PluginSlotTask task) 
-    {        
-        if(isValid(task))            
-        {
+    @Override
+    public String addTask(@WebParam(name = "task") PluginSlotTask task) {
+        if (isValid(task)) {
             System.out.println("add task");
-                        
-            Queue.getInstance().addTask(new QueueTask(task.getDomain(), task.getCommand()));
+
+            Queue.getInstance().addTask(new QueueTask(task.getDomain(), task.getCommand(), task.getSettings()));
             return "OK";
-        }   
-        else
-        {
+        } else {
             return "FAIL";
-        }        
+        }
     }
 
-    /** 
+    /**
      * Web service operation
+     *
      * @param pluginName Binary name of the class to be loaded
      */
     @WebMethod(operationName = "start")
-    public String start(@WebParam(name = "pluginName") String pluginName)
-    {        
-        if(isStarted)
+    @Override
+    public String start(@WebParam(name = "pluginName") String pluginName) {
+        if (isStarted) {
             return "OK";
-        
-        try {                    
+        }
+
+        try {
             System.out.println("starting");
             core.start(pluginName);
             isStarted = true;
@@ -104,15 +102,15 @@ public class PluginSlot {
 
     /**
      * Web service operation
-     *  @param data byte array of some file
+     *
+     * @param data byte array of some file
      */
     @WebMethod(operationName = "push")
-    public URL push(@WebParam(name = "workDir") String workDirPath, @WebParam(name = "data") CacheData data)
-    {
+    @Override
+    public URL push(@WebParam(name = "workDir") String workDirPath, @WebParam(name = "data") CacheData data) {
         //FIXME catches!!!!
-        try 
-        {                        
-            return core.push(workDirPath,data);            
+        try {
+            return core.push(workDirPath, data);
         } catch (IllegalAccessException ex) {
             return null;
         } catch (FileNotFoundException ex) {
@@ -122,17 +120,14 @@ public class PluginSlot {
         } catch (IOException ex) {
             return null;
         }
-    }    
+    }
 
-    private boolean isValid(PluginSlotTask task) 
-    {
-        if(!Command.valid(task.getCommand()))        
-        {
-            System.err.println("Command NOT VALID "+task.getCommand());
+    private boolean isValid(PluginSlotTask task) {
+        if (!Command.valid(task.getCommand())) {
+            System.err.println("Command NOT VALID " + task.getCommand());
             return false;
         }
-        if(task.getDomain() == null || task.getDomain().trim().equals(""))
-        {
+        if (task.getDomain() == null || task.getDomain().trim().equals("")) {
             System.err.println("domain NOT VALID");
             return false;
         }
@@ -143,9 +138,9 @@ public class PluginSlot {
      * Web service operation
      */
     @WebMethod(operationName = "stop")
-    public String stop() 
-    {        
-        core.stop();        
+    @Override
+    public String stop() {
+        core.stop();
         return "OK";
     }
 }
