@@ -1,5 +1,6 @@
 package pt.ua.rlaas.data;
 
+import java.util.LinkedList;
 import pt.ua.rlaas.data.mongodb.MongoPersistence;
 import java.util.List;
 import javax.jws.WebService;
@@ -12,7 +13,7 @@ import javax.jws.WebParam;
  * @author Frederico Honório <fredericohonorio@ua.pt>
  */
 @WebService(serviceName = "Repository")
-public class Repository {
+public class Repository{
 
     /**
      * Web service operation
@@ -106,5 +107,70 @@ public class Repository {
             //problems!
         }
         return p.getSchema(recordSetId);
+    }
+
+    @WebMethod(operationName = "storeRecords")
+    public void storeRecords(List<Record> records, Schema schema, String recordSetId) {
+        MongoPersistence p = MongoPersistence.instance();
+
+        if (!p.checkDb()) {
+            //problems!
+        }
+        p.storeRecords(records, schema, recordSetId);
+    }
+
+    @WebMethod(operationName = "getDirtyRecords")
+    public List<Record> getDirtyRecords(String recordSetId) {
+        MongoPersistence p = MongoPersistence.instance();
+
+        if (!p.checkDb()) {
+            //problems!
+        }
+
+        return p.getDirtyRecords(recordSetId);
+    }
+
+    @WebMethod(operationName = "getCleanRecords")
+    public List<Record> getCleanRecords(String recordSetId) {
+        MongoPersistence p = MongoPersistence.instance();
+
+        if (!p.checkDb()) {
+            //problems!
+        }
+
+        return p.getCleanRecords(recordSetId);
+    }
+
+    @WebMethod(operationName = "storeResultsId")
+    public String storeResultsId(List<Result> results, Schema schema,
+            String resultName) {
+        MongoPersistence p = MongoPersistence.instance();
+
+        if (!p.checkDb()) {
+            //problems!
+        }
+
+        for (Result r : results) {
+            if (r.getMatches() == null) {
+                r.setMatches(new LinkedList<Match>());
+            }
+        }
+
+        return p.storeResultsId(results, schema, resultName);
+    }
+
+    public String test(Record record, Schema schema) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @WebMethod(operationName = "getResultsByName")
+    public List<Result> getResultsByName(@WebParam(name = "resultName") String resultName, @WebParam(name = "taxonomy") String taxonomy) {
+        MongoPersistence p = MongoPersistence.instance();
+
+        if (!p.checkDb()) {
+            //problems!
+        }
+
+        return p.getResultsByName(resultName, taxonomy);
     }
 }

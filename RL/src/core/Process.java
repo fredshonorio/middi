@@ -9,7 +9,7 @@ import java.util.List;
 
 import pt.ua.rlaas.plugin.ExportPlugin;
 import pt.ua.rlaas.plugin.ImportPlugin;
-import pt.ua.rlaas.plugin.TransformPlugin;
+import pt.ua.rlaas.plugin.dev.TaskPlugin;
 import pt.ua.rlaas.data.CompareConfiguration;
 import pt.ua.rlaas.data.DataSource;
 import pt.ua.rlaas.data.Match;
@@ -136,7 +136,7 @@ public class Process {
 
         tmpRecordSets.add(sourceRecords);
 
-        for (TransformPlugin transform : source.transformsImport) {
+        for (TaskPlugin transform : source.transformsImport) {
             System.out.println("running " + transform);
             tmpRecordSets.add(transform.transform(tmpRecordSets.getLast(), source));
         }
@@ -313,7 +313,7 @@ public class Process {
                 // TODO Auto-generated method stub
                 return null;
             }
-        }, new ArrayList<TransformPlugin>()), single, taxonomySet);
+        }, new ArrayList<TaskPlugin>()), single, taxonomySet);
 
         assert matchResults.size() == 1 || matchResults.size() == 0;
 

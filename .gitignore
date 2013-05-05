@@ -15,3 +15,9 @@ old_*/*
 /RL-Common-dev/nbproject/private/
 /RL-Common-dev/build/
 /RL-Common-dev/dist/
+/RL-NotificationClient/nbproject/private/
+/RL-NotificationClient/build/
+/RL-NotificationClient/dist/
+/RL-MasterClient/nbproject/private/
+/RL-MasterClient/build/
+/RL-MasterClient/dist/

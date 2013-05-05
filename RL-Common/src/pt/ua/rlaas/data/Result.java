@@ -43,4 +43,9 @@ public class Result {
     public void setTaxonomyKey(String taxonomyKey) {
         this.taxonomyKey = taxonomyKey;
     }
+
+    @Override
+    public String toString() {
+        return referenceRecord.toString() + " | matches: " + matches.toString();
+    }
 }

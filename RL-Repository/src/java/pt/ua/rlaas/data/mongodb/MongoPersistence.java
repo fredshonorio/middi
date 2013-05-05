@@ -19,6 +19,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import com.mongodb.WriteConcern;
+import java.util.Iterator;
 
 import org.bson.types.ObjectId;
 
@@ -32,10 +33,14 @@ public class MongoPersistence implements IRepository {
     private static MongoClient mongoClient = null;
     private static MongoPersistence instance;
 
+    private enum State {
+
+        DIRTY, CLEAN, ALL
+    }
+
     public static MongoPersistence instance() {
         if (instance == null) {
             instance = new MongoPersistence();
-            System.out.println("new instance");
         }
 
         return instance;
@@ -97,12 +102,14 @@ public class MongoPersistence implements IRepository {
         sets.insert(rs);
         String id = ((ObjectId) rs.get("_id")).toString();
 
-        Schema schema = recordSet.getSchema();
+        if (!recordSet.getRecords().isEmpty()) {
+            Schema schema = recordSet.getSchema();
 
-        DBCollection records = db.getCollection(RECORDSET_COLLECTION_PREFIX + id);
-        assert records.count() == 0 : "The recordset is already in database";
-        for (Record r : recordSet) {
-            records.insert(DBRecord.toDBObject(r, schema));
+            DBCollection records = db.getCollection(RECORDSET_COLLECTION_PREFIX + id);
+            assert records.count() == 0 : "The recordset is already in database";
+            for (Record r : recordSet) {
+                records.insert(DBRecord.toDBObject(r, schema));
+            }
         }
 
         return id;
@@ -116,7 +123,7 @@ public class MongoPersistence implements IRepository {
      */
     @Override
     public List<Record> getAllRecords(String recordSetId) {
-        return getRecords(recordSetId, 0, 0);
+        return getRecords(recordSetId, 0, 0, State.ALL);
     }
 
     /**
@@ -128,8 +135,8 @@ public class MongoPersistence implements IRepository {
      * will fetch all the remaining records.
      * @return
      */
-    @Override
-    public List<Record> getRecords(String recordSetId, int offset, int size) {
+//    @Override
+    private List<Record> getRecords(String recordSetId, int offset, int size, State filter) {
         assert recordSetId != null;
         assert !recordSetId.isEmpty();
         assert offset >= 0;
@@ -140,7 +147,7 @@ public class MongoPersistence implements IRepository {
         DBCollection sets = db.getCollection(RECORDSET_META_COLLECTION);
         DBObject query = new BasicDBObject("_id", recordSetId);
 
-        assert sets.find(query).count() == 0 : "The recordset is not in database";
+        assert sets.find(query).count() == 1 : "The recordset is not in database";
         assert db.getCollectionNames().contains(RECORDSET_COLLECTION_PREFIX + recordSetId) : "The recordset is not in database";
 
         DBCollection collection = db.getCollection(RECORDSET_COLLECTION_PREFIX + recordSetId);
@@ -158,11 +165,20 @@ public class MongoPersistence implements IRepository {
             if (tSchema == null) {
                 tSchema = DBRecord.getImplicitSchema(tmp);
             }
-            records.add(DBRecord.fromDBObject(tmp, tSchema));
+
+            if ((filter == State.DIRTY && tmp.getInt("dirty") == 1) || (filter == State.CLEAN && tmp.getInt("dirty") == 0) || filter == State.ALL) {
+                records.add(DBRecord.fromDBObject(tmp, tSchema));
+                BasicDBObject updateQuery = new BasicDBObject().append("_id", (ObjectId) tmp.get("_id"));
+                BasicDBObject update = new BasicDBObject().append("$set", new BasicDBObject().append(DBRecord.FIELD_DIRTY, 0));
+
+                collection.update(updateQuery, update);
+            }
         }
+
         return records;
     }
 
+    @Override
     public Schema getSchema(String recordSetId) {
         assert recordSetId != null;
         assert !recordSetId.isEmpty();
@@ -181,31 +197,75 @@ public class MongoPersistence implements IRepository {
         BasicDBObject tmp;
         tmp = (BasicDBObject) cursor.next();
         tSchema = DBRecord.getImplicitSchema(tmp);
-        
+
         return tSchema;
     }
 
     @Override
-    public String storeResults(List<Result> results, Schema schema) {
+    public String storeResultsId(List<Result> results, Schema schema,
+            String resultName) {
         assert results != null;
         assert !results.isEmpty();
         assert schema != null;
 
         DBCollection sets = db.getCollection(RESULTSET_META_COLLECTION);
-        BasicDBObject rs = new BasicDBObject().append("name", results.toString()); //TODO: name
-        sets.insert(rs);
-        String id = ((ObjectId) rs.get("_id")).toString();
+
+        DBObject query = new BasicDBObject("name", resultName);
+
+        DBCursor curr = sets.find(query);
+        String id;
+        if (!curr.hasNext()) {
+            BasicDBObject rs = new BasicDBObject().append("name", resultName);
+            sets.insert(rs);
+            id = ((ObjectId) rs.get("_id")).toString();
+        } else {
+            id = ((ObjectId) curr.next().get("_id")).toString();
+        }
 
         DBCollection collection = db.getCollection(RESULTSET_COLLECTION_PREFIX + id);
-        assert collection.count() == 0 : "The result set is already in database";
+//        assert collection.count() == 0 : "The result set is already in database";
 
         collection.ensureIndex(DBResult.FIELD_TAXONOMYKEY);
 
+        BasicDBObject resultQuery = new BasicDBObject();
+        DBCursor resultCurr;
+//        DBObject insert;
         for (Result d : results) {
-            collection.insert(DBResult.toDBObject(d, schema));
-        }
+            DBObject o = DBRecord.toDBObjectSimple(d.getReferenceRecord(), schema);
 
+            resultQuery.append(DBResult.FIELD_REFERENCERECORD, o);
+            resultCurr = collection.find(resultQuery);
+
+            if (resultCurr.count() == 0) { //add result
+                collection.insert(DBResult.toDBObject(d, schema));
+            } else {//increment matches of an existing result
+                DBObject result = resultCurr.next();
+                BasicDBObject command = new BasicDBObject();
+                for (Match m : d.getMatches()) {
+                    command.append("$push", new BasicDBObject().append(DBResult.FIELD_MATCHES, DBMatch.toDBOject(m, schema)));
+
+                }
+                collection.update(result, command);
+            }
+        }
         return id;
+    }
+
+//    private List<Match> getNewMatches(DBObject original, List<Match> newMatches) {
+//        LinkedList<Match> n = new LinkedList<Match>();
+//        
+//        for (original)
+//        
+//        
+//        return n;
+//    }
+    @Override
+    public String storeResults(List<Result> results, Schema schema) {
+
+
+
+
+        return null;
     }
 
     @Override
@@ -268,5 +328,60 @@ public class MongoPersistence implements IRepository {
      */
     public void clear() {
         db.dropDatabase();
+    }
+
+    @Override
+    public void storeRecords(List<Record> records, Schema schema, String recordSetId) {
+//        assert recordSet != null;
+
+        DBCollection sets = db.getCollection(RECORDSET_META_COLLECTION);
+
+        DBObject query = new BasicDBObject("_id", recordSetId);
+        assert sets.find(query).count() == 1 : "The recordset is not in database";
+        //FIX?
+
+        DBCollection records_ = db.getCollection(RECORDSET_COLLECTION_PREFIX + recordSetId);
+        for (Record r : records) {
+            records_.insert(DBRecord.toDBObject(r, schema));
+        }
+
+//        return id;
+    }
+
+    @Override
+    public List<Record> getRecords(String recordSetId, int offset, int size) {
+        return getRecords(recordSetId, offset, size, State.ALL);
+    }
+
+    @Override
+    public List<Record> getDirtyRecords(String recordSetId) {
+        return getRecords(recordSetId, 0, 0, State.DIRTY);
+    }
+
+    @Override
+    public List<Record> getCleanRecords(String recordSetId) {
+        return getRecords(recordSetId, 0, 0, State.CLEAN);
+
+    }
+
+    @Override
+    public List<Result> getResultsByName(String resultName, String taxonomy) {
+        DBCollection sets = db.getCollection(RESULTSET_META_COLLECTION);
+
+        DBObject query = new BasicDBObject("name", resultName);
+
+        DBCursor curr = sets.find(query);
+        String id;
+        if (!curr.hasNext()) {
+            return new LinkedList<Result>();
+        } else {
+            id = ((ObjectId) curr.next().get("_id")).toString();
+        }
+
+        if (taxonomy != null) {
+            return getTaxonomyResults(id, taxonomy);
+        } else {
+            return getAllResults(id);
+        }
     }
 }

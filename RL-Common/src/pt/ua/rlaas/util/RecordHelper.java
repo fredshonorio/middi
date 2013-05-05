@@ -40,8 +40,8 @@ public final class RecordHelper {
         }
         record.getFieldValues().set(idx, value);
     }
-    
-     public void set(Record record, int idxField, String value) {
+
+    public void set(Record record, int idxField, String value) {
         if (idxField >= record.getFieldValues().size()) {
             fill(record);
         }
@@ -55,6 +55,14 @@ public final class RecordHelper {
             return null;
         }
         return record.getFieldValues().get(idx);
+    }
+
+    public String get(Record record, int fieldIdx) {
+        if (fieldIdx == -1 || (fieldIdx < 0 && fieldIdx >= record.getFieldValues().size())) {
+            return null;
+        }
+
+        return record.getFieldValues().get(fieldIdx);
     }
 
     private int findIndex(String field) {

@@ -12,10 +12,19 @@ public class RecordSet implements Iterable<Record> {
 
     protected Schema schema;
     protected List<Record> records;
+    protected String name;
 
     public RecordSet(Schema schema) {
         this.schema = schema;
         this.records = new LinkedList<Record>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public RecordSet() {
@@ -41,7 +50,6 @@ public class RecordSet implements Iterable<Record> {
     }
 
     public void add(Record record) {
-//        assert matchSchema(record);
         if (records == null) {
             getRecords();
         }

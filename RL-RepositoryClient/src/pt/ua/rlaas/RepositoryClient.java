@@ -68,4 +68,29 @@ public class RepositoryClient implements IRepository {
     public Schema getSchema(String recordSetId) {
         return repository.getSchema(recordSetId);
     }
+
+    @Override
+    public void storeRecords(List<Record> records, Schema schema, String recordSetId) {
+        repository.storeRecords(records, schema, recordSetId);
+    }
+
+    @Override
+    public List<Record> getDirtyRecords(String recordSetId) {
+        return repository.getDirtyRecords(recordSetId);
+    }
+
+    @Override
+    public List<Record> getCleanRecords(String recordSetId) {
+        return repository.getCleanRecords(recordSetId);
+    }
+
+    @Override
+    public String storeResultsId(List<Result> results, Schema schema, String resultName) {
+        return repository.storeResultsId(results, schema, resultName);
+    }
+
+    @Override
+    public List<Result> getResultsByName(String resultName, String taxonomy) {
+        return repository.getResultsByName(resultName, taxonomy);
+    }
 }

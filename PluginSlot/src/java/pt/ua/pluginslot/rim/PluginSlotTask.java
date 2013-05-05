@@ -16,8 +16,18 @@ public class PluginSlotTask {
     private String domain;
     private int command;
     private HashMap<String, String> settings;
+    private int id;
+    
 
     public PluginSlotTask() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getCommand() {

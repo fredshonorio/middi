@@ -64,4 +64,15 @@ public interface IRepository {
     String test(Record record, Schema schema);
 
     Schema getSchema(String recordSetId);
+
+    void storeRecords(List<Record> records, Schema schema, String recordSetId);
+
+    List<Record> getDirtyRecords(String recordSetId);
+
+    List<Record> getCleanRecords(String recordSetId);
+
+    String storeResultsId(List<Result> results, Schema schema,
+            String resultName);
+
+    List<Result> getResultsByName(String resultName, String taxonomy);
 }

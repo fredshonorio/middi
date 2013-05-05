@@ -45,9 +45,9 @@ public class DBResult {
     }
 
     public static BasicDBObject toDBObject(Result result, Schema schema) {
-        
+
         BasicDBObject obj = new BasicDBObject();
-        obj.append(FIELD_REFERENCERECORD, DBRecord.toDBObject(result.getReferenceRecord(), schema));
+        obj.append(FIELD_REFERENCERECORD, DBRecord.toDBObjectSimple(result.getReferenceRecord(), schema));
 
         ArrayList<BasicDBObject> matchList = new ArrayList<BasicDBObject>(result.getMatches().size());
 

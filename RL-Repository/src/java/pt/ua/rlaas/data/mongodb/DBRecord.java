@@ -10,11 +10,12 @@ public class DBRecord {
 
     public final static String FIELD_INTERNAL_ID = "_id";
     public final static String FIELD_SOURCEID = "sourceId";
+    public final static String FIELD_DIRTY = "dirty";
 
     public static Record fromDBObject(BasicDBObject obj, Schema schema) {
         assert !obj.isEmpty();
         assert !obj.isPartialObject();
-        
+
         assert obj.containsField(FIELD_SOURCEID);
         String id = obj.getString(FIELD_SOURCEID);
 
@@ -22,7 +23,7 @@ public class DBRecord {
 
         ArrayList<String> values = new ArrayList<String>(size);
 
-        assert obj.size() == size + 2;// : obj.toString()+ "!= " + Arrays.toString(fieldValues); //TODO : improve
+//        assert obj.size() == size + 2;// : obj.toString()+ "!= " + Arrays.toString(fieldValues); //TODO : improve
         for (int i = 0; i < size; i++) {
             assert obj.containsField(schema.getFieldNames().get(i)) : "No field " + schema.getFieldNames().get(i);
             values.add(i, obj.getString(schema.getFieldNames().get(i)));
@@ -48,7 +49,7 @@ public class DBRecord {
         Set<String> fields = obj.keySet();
 
         for (String field : fields) {
-            if (!(field.equals(FIELD_INTERNAL_ID) || field.equals(FIELD_SOURCEID))) {
+            if (!(field.equals(FIELD_INTERNAL_ID) || field.equals(FIELD_SOURCEID) || field.equals(FIELD_DIRTY))) {
                 tmpSchema.add(field);
             }
         }
@@ -59,7 +60,23 @@ public class DBRecord {
     public static BasicDBObject toDBObject(Record record, Schema schema) {
         //TODO: validate sourceId
         int size = schema.getFieldNames().size();
-        BasicDBObject obj = new BasicDBObject(size + 1);
+        BasicDBObject obj = new BasicDBObject(size + 2);
+
+        obj.append(FIELD_SOURCEID, record.getSourceId());
+        obj.append(FIELD_DIRTY, 1);
+
+        for (int i = 0; i < size; i++) {
+            String fiedlName = schema.getFieldNames().get(i);
+            obj.append(fiedlName, record.getFieldValues().get(i)); //getValue(i)
+        }
+
+        return obj;
+    }
+
+    public static BasicDBObject toDBObjectSimple(Record record, Schema schema) {
+        //TODO: validate sourceId
+        int size = schema.getFieldNames().size();
+        BasicDBObject obj = new BasicDBObject(size + 2);
 
         obj.append(FIELD_SOURCEID, record.getSourceId());
 

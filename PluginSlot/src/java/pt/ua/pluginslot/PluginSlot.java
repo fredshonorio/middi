@@ -20,7 +20,7 @@ import pt.ua.pluginslot.rim.CacheData;
 import pt.ua.pluginslot.rim.PluginSet;
 import pt.ua.pluginslot.rim.Plugin;
 import pt.ua.pluginslot.rim.PluginSlotTask;
-import pt.ua.pluginslot.rim.QueueTask;
+//import pt.ua.pluginslot.rim.QueueTask;
 import pt.ua.pluginslot.util.Queue;
 
 /**
@@ -61,9 +61,7 @@ public class PluginSlot implements IPluginSlot {
     @Override
     public String addTask(@WebParam(name = "task") PluginSlotTask task) {
         if (isValid(task)) {
-            System.out.println("add task");
-
-            Queue.getInstance().addTask(new QueueTask(task.getDomain(), task.getCommand(), task.getSettings()));
+            Queue.getInstance().addTask(task);
             return "OK";
         } else {
             return "FAIL";
@@ -83,7 +81,6 @@ public class PluginSlot implements IPluginSlot {
         }
 
         try {
-            System.out.println("starting");
             core.start(pluginName);
             isStarted = true;
         } catch (ClassNotFoundException ex) {

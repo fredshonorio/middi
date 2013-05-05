@@ -73,7 +73,11 @@ public class PluginSlotCore implements Observer
     {
         
         File jar = new File(pluginDir.getPath()+File.separator+plugin.getId()+".jar");
-            
+
+        if (jar.exists()){
+            jar.delete();
+        }
+        
         System.out.println("saving " + jar.getAbsolutePath());
         FileOutputStream fos = new FileOutputStream(jar) ;
         fos.write(plugin.getValue());

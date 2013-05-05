@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://localhost:8080/RL-Master/Notification?wsdl" uri="xml-resources/web-service-references/Notification/wsdl/localhost_8080/RL-Master/Notification.wsdl"/>
+    <system systemId="http://localhost:8080/RL-Master/Notification?xsd=1" uri="xml-resources/web-service-references/Notification/wsdl/localhost_8080/RL-Master/Notification.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/RL-Master/Master?wsdl" uri="xml-resources/web-service-references/Master/wsdl/localhost_8080/RL-Master/Master.wsdl"/>
+    <system systemId="http://localhost:8080/RL-Master/Master?xsd=1" uri="xml-resources/web-service-references/Master/wsdl/localhost_8080/RL-Master/Master.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/RL-Master/Master?xsd=2" uri="xml-resources/web-service-references/Master/wsdl/localhost_8080/RL-Master/Master.xsd_2.xsd"/>
+</catalog>

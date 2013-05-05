@@ -49,7 +49,7 @@ public class DBMatch {
 
     public static BasicDBObject toDBOject(Match match, Schema schema) {
         BasicDBObject obj = new BasicDBObject(2);
-        obj.append(FIELD_MATCHINGRECORD, DBRecord.toDBObject(match.getMatchingRecord(), schema));
+        obj.append(FIELD_MATCHINGRECORD, DBRecord.toDBObjectSimple(match.getMatchingRecord(), schema));
         obj.append(FIELD_SCORE, match.getScore());
 
         return obj;

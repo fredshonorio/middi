@@ -6,7 +6,8 @@ package pt.ua.pluginslot.util;
 
 import java.util.Observable;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import pt.ua.pluginslot.rim.QueueTask;
+import pt.ua.pluginslot.rim.PluginSlotTask;
+//import pt.ua.pluginslot.rim.QueueTask;
 
 /**
  *
@@ -15,7 +16,7 @@ import pt.ua.pluginslot.rim.QueueTask;
 public class Queue extends Observable
 {
     private static Queue instance;
-    private ConcurrentLinkedQueue<QueueTask> queue = new ConcurrentLinkedQueue<QueueTask>();
+    private ConcurrentLinkedQueue<PluginSlotTask> queue = new ConcurrentLinkedQueue<PluginSlotTask>();
     private static int count = 0;
     private Queue()
     {
@@ -29,8 +30,9 @@ public class Queue extends Observable
         return instance;
     }
     
-    public int addTask(QueueTask task)
+    public int addTask(PluginSlotTask task)
     {        
+        System.out.println("Added task to queue");
         task.setId(++count);
         queue.add(task);        
         super.setChanged();
@@ -38,12 +40,12 @@ public class Queue extends Observable
         return count;
     }
     
-    public QueueTask peek()
+    public PluginSlotTask peek()
     {
         return queue.peek();
     }
     
-    public QueueTask remove()
+    public PluginSlotTask remove()
     {
         return queue.remove();
     }

@@ -1,0 +1,164 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.2.0-1 (tags/2.2.0u1-7139; 2012-06-02T10:55:19+0000) JAXWS-RI/2.2.6-2 JAXWS/2.2 svn-revision#unknown. --><xs:schema xmlns:tns="http://rlaas.ua.pt/" xmlns:ns1="http://data.rlaas.ua.pt/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://rlaas.ua.pt/">
+
+<xs:import namespace="http://data.rlaas.ua.pt/" schemaLocation="http://localhost:8080/RL-Master/Master?xsd=2"/>
+
+<xs:element name="definePipeline" type="tns:definePipeline"/>
+
+<xs:element name="definePipelineResponse" type="tns:definePipelineResponse"/>
+
+<xs:element name="init" type="tns:init"/>
+
+<xs:element name="initResponse" type="tns:initResponse"/>
+
+<xs:element name="notifyComplete" type="tns:notifyComplete"/>
+
+<xs:element name="notifyCompleteResponse" type="tns:notifyCompleteResponse"/>
+
+<xs:element name="test" type="tns:test"/>
+
+<xs:element name="testResponse" type="tns:testResponse"/>
+
+<xs:element name="updateRecords" type="tns:updateRecords"/>
+
+<xs:element name="updateRecordsResponse" type="tns:updateRecordsResponse"/>
+
+<xs:element name="uploadPlugin" type="tns:uploadPlugin"/>
+
+<xs:element name="uploadPluginResponse" type="tns:uploadPluginResponse"/>
+
+<xs:complexType name="test">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="testResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="uploadPlugin">
+<xs:sequence>
+<xs:element name="pluginName" type="xs:string" minOccurs="0"/>
+<xs:element name="jarContent" type="xs:base64Binary" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="uploadPluginResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="definePipeline">
+<xs:sequence>
+<xs:element name="pipeline" type="tns:updatePipeline" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="updatePipeline">
+<xs:sequence>
+<xs:element name="compareConfig" type="tns:compareConfig" minOccurs="0"/>
+<xs:element name="domain" type="xs:string" minOccurs="0"/>
+<xs:element name="exportStep" type="tns:exportStep" minOccurs="0"/>
+<xs:element name="pipelineName" type="xs:string" minOccurs="0"/>
+<xs:element name="startingSchema" type="ns1:schema" minOccurs="0"/>
+<xs:element name="transformSteps" type="tns:transformStep" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="compareConfig">
+<xs:sequence>
+<xs:element name="schema" type="ns1:schema" minOccurs="0"/>
+<xs:element name="plugins" type="xs:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="weights" type="xs:double" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="thresholdLow" type="xs:double"/>
+<xs:element name="thresholdHigh" type="xs:double"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="exportStep">
+<xs:sequence>
+<xs:element name="pluginName" type="xs:string" minOccurs="0"/>
+<xs:element name="settings">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="key" minOccurs="0" type="xs:string"/>
+<xs:element name="value" minOccurs="0" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="transformStep">
+<xs:sequence>
+<xs:element name="fields" type="xs:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="pluginName" type="xs:string" minOccurs="0"/>
+<xs:element name="settings">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="key" minOccurs="0" type="xs:string"/>
+<xs:element name="value" minOccurs="0" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="definePipelineResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="notifyComplete">
+<xs:sequence>
+<xs:element name="id" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="notifyCompleteResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="init">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="initResponse">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="updateRecords">
+<xs:sequence>
+<xs:element name="recordUpdate" type="tns:recordUpdate" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="recordUpdate">
+<xs:sequence>
+<xs:element name="pipelineName" type="xs:string" minOccurs="0"/>
+<xs:element name="records" type="ns1:record" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="updateRecordsResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

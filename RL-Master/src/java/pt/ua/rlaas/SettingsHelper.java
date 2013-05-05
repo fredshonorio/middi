@@ -5,7 +5,6 @@ import java.util.Map;
 import pt.ua.pluginslot.PluginSlotTask;
 
 /**
- *
  * @author Frederico Honório <fredericohonorio@ua.pt>
  */
 public class SettingsHelper {
@@ -14,6 +13,13 @@ public class SettingsHelper {
 
     public void put(String key, String value) {
         map.put(key, value);
+    }
+
+    public void append(HashMap<String, String> appendMap) {
+        for (String key : appendMap.keySet()){
+            assert !map.containsKey(key);
+            map.put(key, appendMap.get(key));
+        }
     }
 
     public PluginSlotTask.Settings getSettings() {

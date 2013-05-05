@@ -32,4 +32,9 @@ public class Match {
     public void setScore(double score) {
         this.score = score;
     }
+
+    @Override
+    public String toString() {
+        return "Match{" + "matchingRecord=" + matchingRecord + ", score=" + score + '}';
+    }
 }

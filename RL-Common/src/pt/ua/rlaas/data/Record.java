@@ -3,6 +3,7 @@ package pt.ua.rlaas.data;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -56,6 +57,27 @@ public class Record implements Iterable<String> {
     @Override
     public Iterator<String> iterator() {
         return fieldValues.iterator();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + Objects.hashCode(this.fieldValues);
+        hash = 67 * hash + Objects.hashCode(this.sourceId);
+        hash = 67 * hash + Objects.hashCode(this.taxonomy);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Record other = (Record) obj;
+        return true;
     }
 
     @Override

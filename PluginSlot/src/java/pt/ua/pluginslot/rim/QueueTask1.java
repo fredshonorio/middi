@@ -12,7 +12,7 @@ import java.util.HashMap;
  *
  * @author Luís S. Ribeiro
  */
-public class QueueTask 
+public class QueueTask1 
 {    
     private int id;
     private String domain;      
@@ -20,7 +20,7 @@ public class QueueTask
     //private String pluginName;    
     private int command;
 
-    public QueueTask(String domain, int command, HashMap<String, String> settings){ //,  String pluginName) {
+    public QueueTask1(String domain, int command, HashMap<String, String> settings){ //,  String pluginName) {
         this.domain = domain;
         this.command = command;
         this.settings = settings;

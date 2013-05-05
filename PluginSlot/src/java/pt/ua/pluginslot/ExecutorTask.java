@@ -8,14 +8,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import pt.ua.rlaas.plugin.command.Command;
 
-import pt.ua.pluginslot.rim.QueueTask;
+import pt.ua.pluginslot.rim.PluginSlotTask;
 import pt.ua.pluginslot.util.Queue;
 import pt.ua.rlaas.util.Constants;
 
@@ -37,41 +35,41 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
     public ExecutorTask(File pluginDir) {
         this.pluginDir = pluginDir;
         this.queue = Queue.getInstance();
-        this.t = new Thread(this, "Executor");
     }
 
     public synchronized void start(String pluginName) throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         queue.addObserver(this);
-        System.out.println("THREAD STARTED");
+        System.out.println("THREAD STARTED: " + pluginName);
 
         loader = load();
 
         cl = loader.loadClass(pluginName);
-
+        t = new Thread(this, "Executor");
+        running = true;
         t.start();
     }
 
     @Override
     public void run() {
-        System.out.println("HI!123123");
         t.setContextClassLoader(loader);
 
         while (running) {
             if (queue.isEmpty()) {
                 try {
                     idle = true;
-                    Thread.sleep(30000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException ex) {
 //                    System.out.println("\thas new tasks to execute");
                 }
             } else {
 
                 idle = false;
-                QueueTask task = queue.remove();//queue.peek();
+                PluginSlotTask task = queue.remove();//queue.peek();
                 System.out.println("\tExecuting task id = " + task.getId() + "\n\tcommand: " + task.getCommand());
 
                 HashMap<String, Object> context = new HashMap<String, Object>();
                 context.put(Constants.SlotPlugin.CLASSLOADER_FIELD, loader);
+                context.put(Constants.SlotPlugin.TASKID_FIELD, task.getId());
 
                 try {
                     switch (task.getCommand()) {
@@ -109,6 +107,8 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
     }
 
     private URLClassLoader load() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        URLClassLoader urlLoader = null;
+
         FilenameFilter filter = new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -128,13 +128,13 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
             i++;
         }
 
-        URLClassLoader urlLoader = new URLClassLoader(urls);
 
+        urlLoader = new URLClassLoader(urls);
 
         return urlLoader;
     }
 
-    public void runInit(QueueTask task, HashMap<String, Object> context) throws NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public void runInit(PluginSlotTask task, HashMap<String, Object> context) throws NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Method init = cl.getMethod("init", HashMap.class, HashMap.class);
 
         String path = "WorkDirs" + File.separator + task.getDomain();
@@ -142,9 +142,6 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
         if (!finalDir.exists()) {
             finalDir.mkdirs();
         }
-        //System.setProperty("user.dir", finalDir.getAbsolutePath());
-
-//                                t.setContextClassLoader(loader);
 
         System.out.println("\t\tiniting");
         plugin = cl.newInstance();
@@ -153,7 +150,7 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
         System.out.println("\t\tinited");
     }
 
-    private void runProcess(QueueTask task, HashMap<String, Object> context) throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    private void runProcess(PluginSlotTask task, HashMap<String, Object> context) throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Method process = cl.getMethod("process", HashMap.class);
         String path = "WorkDirs" + File.separator + task.getDomain();
         File finalDir = new File(path);
@@ -172,14 +169,27 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
         destroy.invoke(plugin);
         System.out.println("\t\tdestroyed");
         running = false;
+        //TODO: cleanup
 
+        loader = null;
+
+        FilenameFilter filter = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".jar");
+            }
+        };
+        File[] jars = pluginDir.listFiles(filter);
+
+        for (File jar : jars) {
+            jar.delete();
+        }
     }
 
     @Override
     public void update(Observable o, Object arg) {
         if (o instanceof Queue) {
             if (idle) {
-                System.out.println("Wake up");
                 t.interrupt();
             }
         }
