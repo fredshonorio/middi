@@ -5,7 +5,6 @@ import pt.ua.pluginslot.PluginSet;
 import pt.ua.pluginslot.PluginSlotTask;
 import pt.ua.rlaas.data.Record;
 import pt.ua.rlaas.data.Schema;
-import pt.ua.rlaas.data.StoreRecordSet;
 import pt.ua.rlaas.plugin.command.Command;
 import pt.ua.rlaas.tasks.CompareConfig;
 import pt.ua.rlaas.tasks.ExportStep;
@@ -31,7 +30,6 @@ public class TaskDispatcher {
         updateDomain = update.getDomain();
         updateSchema = update.getStartingSchema();
 
-
         //PLUGINS go first
         PluginManager pluginManager = PluginManager.instance();
 
@@ -45,7 +43,7 @@ public class TaskDispatcher {
             ps.getPlugin().add(pluginManager.getPlugin(pluginName));
         }
 
-        //        ps.getPlugin().add(pluginManager.getPlugin(exportStep.pluginName));
+        ps.getPlugin().add(pluginManager.getPlugin(exportStep.getPluginName()));
 
         try {
             client.uploadPluginSet(ps);
@@ -55,7 +53,7 @@ public class TaskDispatcher {
 
         System.out.println("START: " + client.start(Constants.UpdateTask.METAPLUGIN));
 
-        updateSh.put(Constants.UpdateTask.SCHEMA, Util.concat(";", updateSchema.getFieldNames().toArray(new String[0])));
+        updateSh.put(Constants.UpdateTask.COMPARE_SCHEMA, Util.concat(";", updateSchema.getFieldNames().toArray(new String[0])));
         updateSh.put(Constants.UpdateTask.TRANSFORM_COUNT, Integer.toString(transformSteps.size()));
 
         int i = 0;
@@ -85,26 +83,17 @@ public class TaskDispatcher {
 
         updateSh.put(Constants.SlotPlugin.TASKID_FIELD, Integer.toString(taskId));
         updateSh.put(Constants.UpdateTask.RESULTNAME, "result_" + update.getPipelineName());
-        updateSh.put(Constants.UpdateTask.EXPORTPLUGIN, update.getExportStep().getPluginName());
-        
-//        PluginSlotTask destroy = new PluginSlotTask();
-//        destroy.setDomain(updateDomain);
-//        destroy.setCommand(Command.DESTROY);
-//        destroy.setSettings(updateSh.getSettings());
-//client.addTask(destroy);
+
 
         PluginSlotTask init = new PluginSlotTask();
         init.setDomain(updateDomain);
         init.setCommand(Command.INIT);
         init.setSettings(updateSh.getSettings());
 
-
-        System.out.println("MASTER: INIT TASK " + client.addTask(init));
+        client.addTask(init);
     }
 
     public void sendUpdate(RepositoryClient repo, String pipelineName, PluginSlotClient client, List<Record> records) {
-
-
         repo.storeRecords(records, updateSchema, pipelineName);
 
         PluginSlotTask process = new PluginSlotTask();
@@ -113,5 +102,13 @@ public class TaskDispatcher {
         updateSh.put(Constants.UpdateTask.RECORDSIN, pipelineName);
         process.setSettings(updateSh.getSettings());
         client.addTask(process);
+    }
+
+    public void sendStop(String pipelineName, PluginSlotClient client) {
+
+        PluginSlotTask destroy = new PluginSlotTask();
+        destroy.setDomain(updateDomain);
+        destroy.setCommand(Command.DESTROY);
+        client.addTask(destroy);
     }
 }

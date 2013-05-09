@@ -22,18 +22,24 @@ public class RLNotificationClient {
     static Master n = new Master_Service().getMasterPort();
 
     public static void main(String[] args) {
-
-//        pipeline();
+        //TODO: plugin settings
+        pipeline();
         //TODO: check pipeline on update calls
-//        update();
-
-        update2();
+        update();
+        
+        stop();
+        
+//        update2();
+    }
+    
+    
+    public static void stop(){
+        n.stopPipeline("pipeline");
     }
 
     public static void pipeline() {
-        Schema schema = new Schema();
-        schema.getFieldNames().add("name");
-        schema.getFieldNames().add("bi");
+
+        //load plugins
         try {
             byte[] pl = read("C:\\Users\\PC\\code\\dissertation\\new\\RL-TestPlugins\\dist\\RL-TestPlugins.jar");
             n.uploadPlugin("rl.testplugins.ToUppercase", pl);
@@ -47,34 +53,61 @@ public class RLNotificationClient {
             Logger.getLogger(RLNotificationClient.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        // define pipeline for record updates
         UpdatePipeline up = new UpdatePipeline();
+        up.setDomain("rl");
+        up.setPipelineName("pipeline");
 
-        TransformStep t = new TransformStep();
-        t.setPluginName("rl.testplugins.ToUppercase");
+        //define the schema
+        Schema schema = new Schema();
+        schema.getFieldNames().add("name");
+        schema.getFieldNames().add("bi");
+        up.setStartingSchema(schema);
+
+        //transforms
+        TransformStep t1 = new TransformStep();
+        t1.setPluginName("rl.testplugins.ToUppercase");
+        t1.getFields().add("name");
+
+        //transform 1 settings (optional)
+        TransformStep.Settings s1 = new TransformStep.Settings();
+        TransformStep.Settings.Entry setting1 = new TransformStep.Settings.Entry();
+        setting1.setKey("test");
+        setting1.setValue("me");
+        s1.getEntry().add(setting1);
+        t1.setSettings(s1);
+
         TransformStep t2 = new TransformStep();
         t2.setPluginName("rl.testplugins.FirstLetterTaxonomy");
+        up.getTransformSteps().add(t1);
+        up.getTransformSteps().add(t2);
 
+        //compare
         CompareConfig cfg = new CompareConfig();
-
-        cfg.getPlugins().add("rl.testplugins.Levenshtein");
-
+        //set schema (in this case it's the same, but it may not be)
         cfg.setSchema(schema);
 
+        //add plugins and weights (in the same order)
+        cfg.getPlugins().add("rl.testplugins.Levenshtein");
         cfg.getWeights().add(1d);
         cfg.getWeights().add(0d);
 
+        //define thresholds
         cfg.setThresholdLow(0.3);
         cfg.setThresholdHigh(0.7);
 
-        ExportStep ex = new ExportStep();
-        ex.pluginName = "rl.testplugins.PrintExport";
-
-        up.setPipelineName("pipeline");
-        up.setDomain("rl");
-        up.setStartingSchema(schema);
-        up.getTransformSteps().add(t);
-        up.getTransformSteps().add(t2);
         up.setCompareConfig(cfg);
+
+        //export
+        ExportStep ex = new ExportStep();
+        ex.setPluginName("rl.testplugins.PrintExport");
+        //export settings (optional)
+        ExportStep.Settings s2 = new ExportStep.Settings();
+        ExportStep.Settings.Entry setting2 = new ExportStep.Settings.Entry();
+        setting2.setKey("what's");
+        setting2.setValue("up");
+        s2.getEntry().add(setting2);
+        ex.setSettings(s2);
         up.setExportStep(ex);
 
         n.definePipeline(up);

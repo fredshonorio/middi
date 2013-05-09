@@ -28,7 +28,7 @@ public class TransformMetaPlugin implements TaskPlugin {
 
     @Override
     public void process(HashMap<String, String> settings) {
-        recordsOut = transform.transform(recordsIn, schema);
+//        recordsOut = transform.transform(recordsIn, schema);
         repo.storeRecords(recordsOut, schema, recordsOutId);
     }
 

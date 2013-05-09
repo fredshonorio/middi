@@ -20,7 +20,7 @@ public class TaskQueue {
 
     public enum Type {
 
-        TRANSFORM, COMPARE, EXPORT, UPDATE, PIPELINE
+        TRANSFORM, COMPARE, EXPORT, UPDATE, PIPELINE, STOP_PIPELINE
     }
 
     public class QueueElement {
@@ -96,6 +96,17 @@ public class TaskQueue {
 
     public synchronized void add(RecordUpdate update) {
         QueueElement q = new QueueElement(Type.UPDATE, update, nextId);
+
+        tasks.add(q);
+        taskMap.put(nextId, q);
+
+        nextId++;
+
+        notifyAll();
+    }
+
+    public synchronized void add(String pipelineToStop) {
+        QueueElement q = new QueueElement(Type.STOP_PIPELINE, pipelineToStop, nextId);
 
         tasks.add(q);
         taskMap.put(nextId, q);

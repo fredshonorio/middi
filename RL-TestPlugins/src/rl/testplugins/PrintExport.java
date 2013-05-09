@@ -4,6 +4,7 @@
  */
 package rl.testplugins;
 
+import java.util.HashMap;
 import java.util.List;
 import pt.ua.rlaas.data.Match;
 import pt.ua.rlaas.data.Result;
@@ -29,5 +30,15 @@ public class PrintExport implements ExportPlugin {
             }
 
         }
+    }
+
+    @Override
+    public void init(HashMap<String, String> settings) {
+        System.out.println("PrintExport init: OK");
+
+    }
+
+    @Override
+    public void destroy() {
     }
 }

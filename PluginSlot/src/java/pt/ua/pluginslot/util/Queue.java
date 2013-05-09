@@ -7,7 +7,6 @@ package pt.ua.pluginslot.util;
 import java.util.Observable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import pt.ua.pluginslot.rim.PluginSlotTask;
-//import pt.ua.pluginslot.rim.QueueTask;
 
 /**
  *
@@ -32,7 +31,6 @@ public class Queue extends Observable
     
     public int addTask(PluginSlotTask task)
     {        
-        System.out.println("Added task to queue");
         task.setId(++count);
         queue.add(task);        
         super.setChanged();

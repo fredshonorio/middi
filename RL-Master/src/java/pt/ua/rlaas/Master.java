@@ -139,4 +139,13 @@ public class Master {
         TaskQueue.instance().add(recordUpdate);
         return "OK";
     }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "stopPipeline")
+    public String stopPipeline(@WebParam(name = "pipelineToStop") String pipelineToStop) {
+        TaskQueue.instance().add(pipelineToStop);
+        return "OK";
+    }
 }

@@ -77,7 +77,6 @@ public class PluginManager {
             id = Integer.toString(lastId);
             lastId++;
         }
-        lastId++;
 
         String path = pluginPath(id);
 
@@ -88,7 +87,7 @@ public class PluginManager {
             write(jarContent, jar);
         } catch (IOException ex) {
         }
-
+        
         map.put(name, new PluginInfo(id, path));
 
     }

@@ -5,7 +5,7 @@ import java.util.List;
 import pt.ua.rlaas.data.Match;
 import pt.ua.rlaas.data.Result;
 
-public interface ExportPlugin {
+public interface ExportPlugin extends Plugin {
 
     public void export(List<Match> matches);
 

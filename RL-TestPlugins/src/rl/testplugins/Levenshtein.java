@@ -1,5 +1,6 @@
 package rl.testplugins;
 
+import java.util.HashMap;
 import pt.ua.rlaas.plugin.ComparePlugin;
 import pt.ua.rlaas.util.Util;
 
@@ -37,5 +38,14 @@ public class Levenshtein implements ComparePlugin {
         }
 
         return distance[str1.length()][str2.length()];
+    }
+
+    @Override
+    public void init(HashMap<String, String> settings) {
+          System.out.println("Levenshtein init: OK");
+  }
+
+    @Override
+    public void destroy() {
     }
 }

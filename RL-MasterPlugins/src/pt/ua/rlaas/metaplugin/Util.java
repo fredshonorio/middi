@@ -1,9 +1,11 @@
 package pt.ua.rlaas.metaplugin;
 
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pt.ua.rlaas.data.Schema;
 import pt.ua.rlaas.plugin.ComparePlugin;
+import pt.ua.rlaas.util.Constants;
 
 /**
  *
@@ -38,6 +40,19 @@ public class Util {
         return d;
     }
 
+    public static HashMap<String, String> getInnerSettings(HashMap<String, String> settings, String path) {
+        HashMap<String, String> map = new HashMap<String, String>();
+
+        for (String setting : settings.keySet()) {
+            if (setting.contains(path)) {
+                String newPath = setting.replaceFirst(path, "");
+                map.put(newPath, settings.get(setting));
+            }
+        }
+
+        return map;
+    }
+
     public static Schema getSchema(String str) {
         return new Schema(getStrings(str));
     }
@@ -52,7 +67,6 @@ public class Util {
         }
 
         for (String name : namesS) {
-            System.out.println("loading: " + name);
             array[i] = (T) getPluginInstance(loader, name);
             i++;
         }
@@ -67,7 +81,6 @@ public class Util {
         ComparePlugin[] array = new ComparePlugin[size];
 
         for (String name : namesS) {
-            System.out.println("loading: " + name);
             array[i] = (ComparePlugin) getPluginInstance(loader, name);
             i++;
         }
@@ -77,6 +90,7 @@ public class Util {
     public static Object getPluginInstance(ClassLoader loader, String name) {
         Object obj = null;
         try {
+            System.out.println("loading: " + name);
             Class cl = null;
             cl = loader.loadClass(name);
             obj = cl.newInstance();

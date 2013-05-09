@@ -10,7 +10,6 @@ import pt.ua.rlaas.data.Record;
 import pt.ua.rlaas.data.Schema;
 import pt.ua.rlaas.plugin.TransformPlugin;
 import pt.ua.rlaas.util.RecordHelper;
-import pt.ua.rlaas.util.Constants;
 
 /**
  *
@@ -18,20 +17,14 @@ import pt.ua.rlaas.util.Constants;
  */
 public class ToUppercase implements TransformPlugin {
 
-    String[] fields;
-
     @Override
     public void init(HashMap<String, String> settings) {
-        String fieldStr = settings.get(Constants.TransformTask.FIELDS_FIELD);
-        System.out.println("sett:" + fieldStr);
-//        fields = fieldStr.split(";");
-//        fields = new String[]{"nome"};
+        System.out.println("ToUppercase init: OK");
     }
 
     @Override
-    public List<Record> transform(List<Record> records, Schema schema) {
+    public List<Record> transform(List<Record> records, Schema schema, String[] fields) {
         RecordHelper rh = new RecordHelper(schema);
-        fields = new String[]{"name"};
         for (Record r : records) {
             for (String f : fields) {
                 rh.set(r, f, rh.get(r, f).toUpperCase());
@@ -39,5 +32,9 @@ public class ToUppercase implements TransformPlugin {
         }
 
         return records;
+    }
+
+    @Override
+    public void destroy() {
     }
 }

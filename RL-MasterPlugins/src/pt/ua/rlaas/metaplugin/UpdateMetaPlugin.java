@@ -28,6 +28,7 @@ import pt.ua.rlaas.util.RecordHelper;
 public class UpdateMetaPlugin implements TaskPlugin {
 
     private List<TransformPlugin> transforms;
+    private HashMap<TransformPlugin, String[]> transformFields = new HashMap<TransformPlugin, String[]>();
 //    private List<HashMap<String, String>> tSettings;
     private List<Record> recordsRef, recordsNew;
     private ExportPlugin export;
@@ -57,23 +58,23 @@ public class UpdateMetaPlugin implements TaskPlugin {
         //LOAD new records
         String recordSetId = settings.get(Constants.UpdateTask.RECORDSIN);
 
-//        System.out.println("in:" + recordSetId);
-//        System.out.println("a:" + resultName);
+        // System.out.println("in:" + recordSetId);
+        // System.out.println("a:" + resultName);
 
         recordsNew = repo.getDirtyRecords(recordSetId);
-//        System.out.println("NEW:" + recordsNew.toString());
+        // System.out.println("NEW:" + recordsNew.toString());
 
         //TRANSFORM 
         List<Record> records = recordsNew;
         for (TransformPlugin transf : transforms) {
-            records = transf.transform(records, schema);
+            records = transf.transform(records, schema, transformFields.get(transf));
         }
         recordsNew = records;
 
         String taxonomy = null;//recordsNew.get(0).getTaxonomy();
 
         recordsRef = getReferenceRecords(repo.getResultsByName(resultName, taxonomy)); //TODO: taxonomy
-//        System.out.println("OLD:" + recordsRef.toString());
+        // System.out.println("OLD:" + recordsRef.toString());
 
         //MATCH
         LinkedList<Result> results = new LinkedList<Result>();
@@ -160,11 +161,14 @@ public class UpdateMetaPlugin implements TaskPlugin {
         int t = Integer.parseInt(settings.get(Constants.UpdateTask.TRANSFORM_COUNT));
 
         transforms = new ArrayList<TransformPlugin>();
-
         TransformPlugin transform;
         for (int i = 0; i < t; i++) {
-            transform = (TransformPlugin) Util.getPluginInstance(ldr, (String) settings.get(Constants.UpdateTask.TRANSFORM_PLUGINNAME_FIELD(i)));
-            //TODO: transform.init(settings);
+            //load plugin
+            transform = (TransformPlugin) Util.getPluginInstance(ldr, settings.get(Constants.UpdateTask.TRANSFORM_PLUGINNAME_FIELD(i)));
+            //load fields used in transform
+            transformFields.put(transform, Util.getStrings(settings.get(Constants.UpdateTask.TRANSFORM_FIELDS(i))));
+            //init
+            transform.init(Util.getInnerSettings(settings, Constants.UpdateTask.TRANSFORM_SETTING_PREFIX(i)));
             transforms.add(transform);
         }
 
@@ -175,13 +179,12 @@ public class UpdateMetaPlugin implements TaskPlugin {
         comparePlugins = Util.resizeCmp(comparePlugins, weights);
         thresholdHigh = Util.getDouble(settings.get(Constants.UpdateTask.THRESHOLDHIGH_FIELD))[0];
         thresholdLow = Util.getDouble(settings.get(Constants.UpdateTask.THRESHOLDLOW_FIELD))[0];
-        schema = Util.getSchema(settings.get(Constants.UpdateTask.SCHEMA));
+        schema = Util.getSchema(settings.get(Constants.UpdateTask.COMPARE_SCHEMA));
         resultName = settings.get(Constants.UpdateTask.RESULTNAME);
 
         //********export********//
-        export = (ExportPlugin) Util.getPluginInstance(ldr, settings.get(Constants.UpdateTask.EXPORTPLUGIN));
-        //TODO:init
-
+        export = (ExportPlugin) Util.getPluginInstance(ldr, settings.get(Constants.UpdateTask.EXPORT_PLUGINNAME));
+        export.init(Util.getInnerSettings(settings, Constants.UpdateTask.EXPORT_SETTING_PREFIX));
     }
 
     @Override

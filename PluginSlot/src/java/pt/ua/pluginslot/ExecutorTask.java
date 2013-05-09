@@ -2,6 +2,7 @@ package pt.ua.pluginslot;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -10,6 +11,7 @@ import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,13 +30,17 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
     private Queue queue;
     private Thread t;
     private Class cl;
-    private ClassLoader loader;
+    private ClassLoader loader, systemLoader;
     private Object plugin;
     private File pluginDir;
+    private long startTime;
+    
+    private final Object monitor = new Object();
 
     public ExecutorTask(File pluginDir) {
         this.pluginDir = pluginDir;
         this.queue = Queue.getInstance();
+        systemLoader = ClassLoader.getSystemClassLoader();
     }
 
     public synchronized void start(String pluginName) throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
@@ -45,6 +51,7 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
 
         cl = loader.loadClass(pluginName);
         t = new Thread(this, "Executor");
+
         running = true;
         t.start();
     }
@@ -53,20 +60,21 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
     public void run() {
         t.setContextClassLoader(loader);
 
+        startTime = System.currentTimeMillis();
         while (running) {
             if (queue.isEmpty()) {
                 try {
                     idle = true;
-                    Thread.sleep(3000);
+                    // Thread.sleep(3000);
+                    synchronized (monitor){
+                        monitor.wait();
+                    }
                 } catch (InterruptedException ex) {
-//                    System.out.println("\thas new tasks to execute");
                 }
             } else {
-
                 idle = false;
                 PluginSlotTask task = queue.remove();//queue.peek();
-                System.out.println("\tExecuting task id = " + task.getId() + "\n\tcommand: " + task.getCommand());
-
+                System.err.println("Executing task #" + task.getId());
                 HashMap<String, Object> context = new HashMap<String, Object>();
                 context.put(Constants.SlotPlugin.CLASSLOADER_FIELD, loader);
                 context.put(Constants.SlotPlugin.TASKID_FIELD, task.getId());
@@ -93,13 +101,13 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
 //                    ex.printStackTrace();
                     Logger.getLogger(ExecutorTask.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                System.out.println("\tExecuted task id = " + task.getId());
+                System.err.println("Completed task #" + task.getId());
             }
         }
     }
 
     public void stop() {
-        System.err.println("STOP executor");
+//        System.err.println("STOP executor");
         this.running = false;
         if (idle) {
             t.interrupt();
@@ -107,7 +115,7 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
     }
 
     private URLClassLoader load() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        URLClassLoader urlLoader = null;
+        URLClassLoader pluginLoader = null;
 
         FilenameFilter filter = new FilenameFilter() {
             @Override
@@ -115,6 +123,7 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
                 return name.endsWith(".jar");
             }
         };
+
         File[] jars = pluginDir.listFiles(filter);
 
         int i;
@@ -124,14 +133,14 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
         i = 0;
         for (File jar : jars) {
             urls[i] = jar.toURI().toURL();
-            System.out.println(urls[i]);
             i++;
         }
 
 
-        urlLoader = new URLClassLoader(urls);
+        pluginLoader = new PluginLoader(urls, systemLoader);
 
-        return urlLoader;
+        System.out.println("Plugins loaded.");
+        return pluginLoader;
     }
 
     public void runInit(PluginSlotTask task, HashMap<String, Object> context) throws NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -143,11 +152,10 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
             finalDir.mkdirs();
         }
 
-        System.out.println("\t\tiniting");
+        System.out.println("INIT");
         plugin = cl.newInstance();
 
         init.invoke(plugin, task.getSettings(), context);
-        System.out.println("\t\tinited");
     }
 
     private void runProcess(PluginSlotTask task, HashMap<String, Object> context) throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -155,23 +163,26 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
         String path = "WorkDirs" + File.separator + task.getDomain();
         File finalDir = new File(path);
 
-        System.err.println(finalDir.getPath() + " exists? " + finalDir.exists());
         if (!finalDir.exists()) {
             finalDir.mkdirs();
         }
+
+        System.out.println("PROCESS");
         process.invoke(plugin, task.getSettings());
-        System.out.println("\t\tprocessed");
+
     }
 
     private void runDestroy() throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Method destroy = cl.getMethod("destroy");
-        System.out.println("\t\tdestroying");
+        System.out.println("DESTROY");
         destroy.invoke(plugin);
-        System.out.println("\t\tdestroyed");
         running = false;
-        //TODO: cleanup
 
+        t.setContextClassLoader(systemLoader);
+        cl = null;
         loader = null;
+        plugin = null;
+        System.gc();
 
         FilenameFilter filter = new FilenameFilter() {
             @Override
@@ -182,8 +193,11 @@ public class ExecutorTask extends Observable implements Runnable, Observer {
         File[] jars = pluginDir.listFiles(filter);
 
         for (File jar : jars) {
-            jar.delete();
+//            System.out.println("Deleting " + jar + ": " + ((jar.delete() ? "OK" : "FAILED")));
+            jar.deleteOnExit();
         }
+
+        System.out.println((System.currentTimeMillis() - startTime) + " ms");
     }
 
     @Override

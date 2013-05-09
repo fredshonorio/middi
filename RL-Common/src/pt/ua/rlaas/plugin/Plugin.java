@@ -11,10 +11,9 @@ import java.util.HashMap;
  *
  * @author Luís S. Ribeiro
  */
-public interface Plugin 
-{
-//    void init(HashMap<String,String> settings, ExecutionContext context);
-//    
-//    void destroy();
-    
+public interface Plugin {
+
+    void init(HashMap<String, String> settings);
+
+    void destroy();
 }

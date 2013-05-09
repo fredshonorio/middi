@@ -19,12 +19,13 @@ public class FirstLetterTaxonomy implements TransformPlugin {
 
     @Override
     public void init(HashMap<String, String> settings) {
+        System.out.println("FirstLetterTaxonomy init: OK");
     }
 
     @Override
-    public List<Record> transform(List<Record> records, Schema schema) {
+    public List<Record> transform(List<Record> records, Schema schema, String[] fields) {
         RecordHelper rh = new RecordHelper(schema);
-        
+
         for (Record r : records) {
             String t = rh.get(r, "name").toUpperCase();
 
@@ -36,5 +37,9 @@ public class FirstLetterTaxonomy implements TransformPlugin {
         }
 
         return records;
+    }
+
+    @Override
+    public void destroy() {
     }
 }

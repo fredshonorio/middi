@@ -30,13 +30,9 @@ import pt.ua.pluginslot.util.Queue;
 @WebService(serviceName = "PluginSlot")
 public class PluginSlot implements IPluginSlot {
 
-    private PluginSlotCore core;
-    private File cache = new File("Plugins");
+    private PluginSlotCore core = PluginSlotCore.instance();
     private boolean isStarted = false;
-
-    public PluginSlot() throws FileNotFoundException {
-        core = new PluginSlotCore(cache);
-    }
+    
 
     /**
      * Web service operation
@@ -44,13 +40,12 @@ public class PluginSlot implements IPluginSlot {
     @WebMethod(operationName = "UploadPluginSet")
     @Override
     public String UploadPluginSet(@WebParam(name = "pluginSet") PluginSet pluginSet) throws FileNotFoundException, IOException {
-        System.out.println("New Plugin to save");
-        List<Plugin> plugins = pluginSet.getPlugin();
-        for (Plugin plugin : plugins) {
-            System.out.println(plugin.getId());
-            core.savePlugin(plugin);
+         try {
+            core.savePluginSet(pluginSet);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.toString();
         }
-
         return "OK";
     }
 
@@ -83,15 +78,16 @@ public class PluginSlot implements IPluginSlot {
         try {
             core.start(pluginName);
             isStarted = true;
-        } catch (ClassNotFoundException ex) {
-            return ex.toString();
-        } catch (MalformedURLException ex) {
-            return ex.toString();
-        } catch (InstantiationException ex) {
-            return ex.toString();
-        } catch (IllegalAccessException ex) {
-            return ex.toString();
+//        } catch (ClassNotFoundException ex) {
+//            return ex.toString();
+//        } catch (MalformedURLException ex) {
+//            return ex.toString();
+//        } catch (InstantiationException ex) {
+//            return ex.toString();
+//        } catch (IllegalAccessException ex) {
+//            return ex.toString();
         } catch (Exception ex) {
+            ex.printStackTrace();
             return ex.toString();
         }
         return "OK";

@@ -4,10 +4,6 @@ import pt.ua.pluginslot.PluginSet;
 import pt.ua.pluginslot.PluginSlotTask;
 import pt.ua.rlaas.data.RecordSet;
 import pt.ua.rlaas.plugin.command.Command;
-import pt.ua.rlaas.tasks.Task;
-import static pt.ua.rlaas.tasks.Task.COMMON_NAME;
-import static pt.ua.rlaas.tasks.Task.MASTERPLUGIN_NAME;
-import static pt.ua.rlaas.tasks.Task.REPOCLIENT_NAME;
 import pt.ua.rlaas.tasks.TaskQueue;
 import pt.ua.rlaas.tasks.TransformTask;
 import pt.ua.rlaas.tasks.UpdatePipeline;
@@ -30,19 +26,17 @@ public class TaskManager implements Runnable {
         queue = TaskQueue.instance();
         TaskQueue.QueueElement e;
         client = new PluginSlotClient("http://localhost:8080/PluginSlot/PluginSlot?wsdl");
-
         repo = new RepositoryClient();
-
         TaskDispatcher dispatcher = new TaskDispatcher();
-
         while (true) {
             e = queue.getAvailableTask();
-            System.out.println("TASKS: " + queue.getSize());
-
-            System.out.println("SUBMITING " + e.type.toString());
             switch (e.type) {
                 case PIPELINE:
                     dispatcher.sendPipeline(client, e.id, (UpdatePipeline) e.task);
+                    queue.markComplete(e.id);
+                    break;
+                case STOP_PIPELINE:
+                    dispatcher.sendStop((String) e.task, client);
                     queue.markComplete(e.id);
                     break;
                 case UPDATE:
@@ -50,6 +44,8 @@ public class TaskManager implements Runnable {
                     dispatcher.sendUpdate(repo, update.getPipelineName(), client, update.getRecords());
                     queue.markComplete(e.id);
                     break;
+
+
             }
         }
     }
